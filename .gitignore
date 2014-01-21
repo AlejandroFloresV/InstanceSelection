@@ -1,5 +1,6 @@
 run
+output/parse
 output/*.out
 output/*.rawout
+data/norm
 data/*.data
-data/*.csv
