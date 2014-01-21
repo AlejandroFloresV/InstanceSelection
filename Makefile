@@ -1,13 +1,13 @@
 CC = g++
-OBJ = run
+SOL = run
 OUT = output/parse
 DAT = data/norm
 
 all: solver extra
 
 solver:
-	rm $(OBJ)
-	$(CC) $(OBJ).cpp -o $(OBJ)
+	rm $(SOL)
+	$(CC) $(SOL).cpp -o $(SOL)
 
 extra:
 	rm $(DAT)
