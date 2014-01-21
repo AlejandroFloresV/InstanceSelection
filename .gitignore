@@ -1,3 +1,5 @@
-output/out
+run
+output/*.out
+output/*.rawout
 data/*.data
 data/*.csv
