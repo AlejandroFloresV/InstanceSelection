@@ -9,7 +9,7 @@ Just run `make` in the root folder. This command will compile everything you nee
 
 To run a particular metaheuristic against some of the datasets provided just type:
 
-	src/solver <algorithm> <dataset> <# 10-fcv set>
+	src/solver <algorithm> data/<dataset>.norm <# 10-fcv set>
 
 Where:
 
