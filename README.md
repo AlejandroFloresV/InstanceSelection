@@ -13,10 +13,10 @@ To run a particular metaheuristic against some of the datasets provided just typ
 
 Where:
 
-- *Algorithm*: `GGA`, `SGA`, `CHC`, `StandardPBIL`, `RandomPBIL`, `ClosestEnemyPBIL` or `PSO`.
-- *Dataset*: `iris`, `wdbc` or `segmentation`.
-- *10-fcv set*: a number between [0,9].
+- **Algorithm**: `GGA`, `SGA`, `CHC`, `StandardPBIL`, `RandomPBIL`, `ClosestEnemyPBIL` or `PSO`.
+- **Dataset**: `iris`, `wdbc` or `segmentation`.
+- **10-fcv set**: a number between [0,9].
 
-You can also run a _Full Factorial Experiment_ for every 10-fcv set by typing:
+You can also run a *Full Factorial Experiment* for every 10-fcv set by typing:
 
 	./run.sh <algorithm> <dataset>
