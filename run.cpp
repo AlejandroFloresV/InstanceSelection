@@ -18,7 +18,7 @@ using namespace std;
 int main(int argc, char* argv[]) {
 
 	if (argc!=4)
-		FatalError("Wrong # of arguments. Must be <dataset> <# 10-fcv set>.");
+		FatalError("Wrong # of arguments. Must be <algorithm> <dataset> <# 10-fcv set>.");
 
 	int tenfcv = atoi(argv[3]);
 	if (tenfcv<0 || 9<tenfcv)
