@@ -1,6 +1,3 @@
-run
-output/parse
-output/*.out
-output/*.rawout
-data/norm
+bin/*
+output/*
 data/*.data

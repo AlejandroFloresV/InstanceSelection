@@ -1,16 +1,13 @@
-CC = g++
-SOL = run
-OUT = output/parse
-DAT = data/norm
-
 all: solver extra
 
 solver:
-	rm $(SOL)
-	$(CC) $(SOL).cpp -o $(SOL)
+	mkdir -p bin
+	rm -f bin/solver
+	c++ src/solver.cpp -o bin/solver
 
 extra:
-	rm $(DAT)
-	$(CC) $(DAT).cpp -o $(DAT)
-	rm $(OUT)
-	$(CC) $(OUT).cpp -o $(OUT)
+	mkdir -p bin
+	rm -f bin/normalize
+	c++ src/normalize.cpp -o bin/normalize
+	rm -f bin/parseOutput
+	c++ src/parseOutput.cpp -o bin/parseOutput
