@@ -48,7 +48,7 @@ int main (int argc, char *argv[]) {
 		exit(1);
 	}
 	ind = K = N = c = 0;
-	int offset = 0;
+	int offset = 0, rScan;
 	char buff[10000],sep;
 
 	for (int i=0 ; i<rows ; i++) {
@@ -59,11 +59,13 @@ int main (int argc, char *argv[]) {
 	while (!feof(src)) {
 		for (int i=0,k=0 ; i<rows ; i++) {
 			if (rowInd[i]=='c') {
-				fscanf(src,"%[^,\n]%c",buff,&sep);
+				rScan = fscanf(src,"%[^,\n]%c",buff,&sep);
+				if (rScan!=2) { N--; break; }
 				addClass(string(buff));
 			} else if (rowInd[i]=='.') {
-				fscanf(src,"%lf%c",A+ind,&sep);
-				if (ind<rows) {
+				rScan = fscanf(src,"%lf%c",A+ind,&sep);
+				if (rScan!=2) { N--; break; }
+				if (ind<K) {
 					maxA[k] = minA[k] = A[ind];
 				} else {
 					minA[k] = min(minA[k],A[ind]);
@@ -72,11 +74,11 @@ int main (int argc, char *argv[]) {
 				ind++;
 				k++;
 			} else {
-				fscanf(src,"%[^,\n]%c",buff,&sep);
+				rScan = fscanf(src,"%[^,\n]%c",buff,&sep);
+				if (rScan!=2) { N--; break; }
 			}
 		}
 		N++;
-		fscanf(src,"%c",&sep);
 	}
 	
 	fclose(src);

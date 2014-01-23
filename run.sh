@@ -21,7 +21,7 @@ do
 done
 
 echo -e "\rParsing output..."
-bin/parse < output/$1-$2.rawout > output/$1-$2.out
+bin/parseOutput < output/$1-$2.rawout > output/$1-$2.out
 rm output/$1-$2.rawout
 echo "Saved at output/$1-$2.out"
 echo "Done."
