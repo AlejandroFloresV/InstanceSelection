@@ -155,6 +155,8 @@ Chromosome SGA() {
 		cA = TournamentSel(&pop);
 		cB = TournamentSel(&pop);
 		Offspring crossAB = CrossoverOnePoint(cA,cB);
+		crossAB.first.mutate();
+		crossAB.second.mutate();
 		pop.push_back(crossAB.first);
 		pop.push_back(crossAB.second);
 		sortPopulation(pop);
