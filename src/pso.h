@@ -68,7 +68,7 @@ void Particle::GenerateSamples() {
 	// Update Local & Global Best
 	if (LBestF<0.0 || bestF < LBestF) {
 		LBestF = bestF;
-		LBestC = Chromosome(TR.N,bestV);
+		LBestC = Chromosome(bestV);
 		if (*GBestF<0.0 || LBestF < *GBestF) {
 			*GBestF = LBestF;
 			*GBestC = LBestC;

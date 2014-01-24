@@ -67,7 +67,7 @@ void ProbVector::GenerateSamples() {
 			if (drand()<Vp[i])
 				currV.push_back(i);
 		}
-		newPop[p] = Chromosome(TR.N,currV);
+		newPop[p] = Chromosome(currV);
 	}
 
 	sort(newPop.begin(),newPop.end());

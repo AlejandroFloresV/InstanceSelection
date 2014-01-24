@@ -14,15 +14,18 @@ using namespace std;
 
 double setAttr[MAXINST * MAXATTR];
 char   setClass[MAXINST];
+int    originalIndex[MAXINST];
 
 class InstanceSet {
 	public:
 	int N,begin;
 	char *Class;
+	int *Index;
 	InstanceSet(){}
 	InstanceSet(int n, int b) : N(n) {
 		begin = b*NumClass;
 		Class = setClass+b;
+		Index = originalIndex+b;
 	}
 	double* operator[](const int&);
 } TR,TS;
@@ -55,9 +58,11 @@ void LoadData (string path, int testIndex) {
 		fscanf(src,"%d",&temp);
 		if (temp == testIndex) {
 			clss = TS.Class + tsInd;
+			TS.Index[tsInd] = n;
 			attr = TS[tsInd++];
 		} else {
 			clss = TR.Class + trInd;
+			TR.Index[trInd] = n;
 			attr = TR[trInd++];
 		}
 		for (int k=0 ; k<NumClass ; k++)

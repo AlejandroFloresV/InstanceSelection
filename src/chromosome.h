@@ -14,11 +14,11 @@ class Chromosome {
 	int it,valIt;
 	mutable double fit;
 	public:
-	int on,n;
+	int on;
 	vector<int> gene;
 	Chromosome() {}
-	Chromosome(int,int);
-	Chromosome(int,vector<int>,double);
+	Chromosome(int);
+	Chromosome(vector<int>,double);
 	double fitness() const;
 	void iterator();
 	bool next();
@@ -29,23 +29,29 @@ class Chromosome {
 	}
 };
 
-Chromosome::Chromosome(int _n, int _on) {
+Chromosome::Chromosome(int _on) {
 	on = _on;
-	n = _n;
 	fit = -1.0;
 	it = valIt = 0;
 	set<int> m;
 	while (m.size()<_on)
-		m.insert(rand()%_n);
+		m.insert(rand() % TR.N);
 	gene = vector<int>(m.begin(),m.end());
 }
 
-Chromosome::Chromosome(int _n, vector<int> genesOn, double _fit = -1.0) {
-	n = _n;
+Chromosome::Chromosome(vector<int> genesOn, double _fit = -1.0) {
 	fit = _fit;
 	it = valIt = 0;
 	on = genesOn.size();
 	gene = genesOn;
+}
+
+double Chromosome::fitness() const {
+	if (fit < 0.0) {
+		NN.useJust(gene);
+		fit = NN.fitnessAR();
+	}
+	return fit;
 }
 
 void Chromosome::iterator() {
@@ -66,7 +72,7 @@ void Chromosome::mutate() {
 	this->iterator();
 	vector<int> newGene;
 	bool isOn;
-	for (int i=0 ; i<n ; i++) {
+	for (int i=0 ; i<TR.N ; i++) {
 		isOn = this->next();
 		if (drand() < MUTATION_RATE)
 			isOn = !isOn;
@@ -77,8 +83,8 @@ void Chromosome::mutate() {
 }
 
 void Chromosome::print() {
-	printf("Size(%d) On(%d) : ",n,on);
+	printf("On(%d) : ",on);
 	for (int i=0 ; i<on ; i++)
-		printf("%d ",gene[i]);
+		printf("%d ",TR.Index[gene[i]]);
 	printf("\n");
 }

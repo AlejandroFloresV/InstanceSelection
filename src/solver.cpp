@@ -6,9 +6,9 @@
 #include<vector>
 #include<set>
 #include "conf.h"
-#include "chromosome.h"
 #include "tenfold.h"
 #include "onenn.h"
+#include "chromosome.h"
 #include "pbil.h"
 #include "pso.h"
 #include "genetic.h"

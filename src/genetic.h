@@ -21,7 +21,7 @@ using namespace std;
 Population initPop() {
 	Population pop(GENETIC_POP);
 	for (int i=0 ; i<GENETIC_POP ; i++)
-		pop[i] = Chromosome(TR.N,(int)round(TR.N*(0.04+0.02*drand())));
+		pop[i] = Chromosome((int)round(TR.N*(0.04+0.02*drand())));
 	return pop;
 }
 
@@ -36,7 +36,7 @@ Population initPopFrom(Chromosome from) {
 			if (drand() < 0.35) iB = !iB;
 			if (iB) v.push_back(i);
 		}
-		pop[i] = Chromosome(TR.N,v);
+		pop[i] = Chromosome(v);
 	}
 	return pop;
 }
@@ -79,7 +79,7 @@ Offspring CrossoverOnePoint(Chromosome a, Chromosome b) {
 		if (bA) vA.push_back(i);
 		if (bB) vB.push_back(i);
 	}
-	return make_pair(Chromosome(TR.N,vA),Chromosome(TR.N,vB));
+	return make_pair(Chromosome(vA),Chromosome(vB));
 }
 
 Offspring CrossoverHUX(Chromosome a, Chromosome b) {
@@ -99,7 +99,7 @@ Offspring CrossoverHUX(Chromosome a, Chromosome b) {
 		if (bA) vA.push_back(i);
 		if (bB) vB.push_back(i);
 	}
-	return make_pair(Chromosome(TR.N,vA),Chromosome(TR.N,vB));
+	return make_pair(Chromosome(vA),Chromosome(vB));
 }
 
 // +--------------------+

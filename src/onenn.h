@@ -134,15 +134,3 @@ vector<double> OneNN::ClosestEnemy() {
 		CE[i] = 1.0-(CE[i]-minD)/(maxD-minD);
 	return CE;
 }
-
-/* +--------------------+ */
-/* | Chromosome Fitness | */
-/* +--------------------+ */
-
-double Chromosome::fitness() const {
-	if (fit < 0.0) {
-		NN.useJust(gene);
-		fit = NN.fitnessAR();
-	}
-	return fit;
-}
