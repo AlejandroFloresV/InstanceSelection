@@ -53,7 +53,7 @@ void ProbVector::RandomProb() {
 
 void ProbVector::EnemyProb(bool closest) {
 
-	Vp = vector<double>(TR.N,0.03);
+	Vp = vector<double>(TR.N,0.02);
 	vector<double> cd = NN.ClosestEnemy();
 	vector<pair<double,int> > cp(TR.N);
 
@@ -61,7 +61,7 @@ void ProbVector::EnemyProb(bool closest) {
 		cp[i] = make_pair(cd[i],i);
 	sort(cp.begin(),cp.end());
 
-	for (int i=(closest ? TR.N-1 : 0), j=TR.N/25 ;
+	for (int i=(closest ? TR.N-1 : 0), j=TR.N/40 ;
 		i>=0 && j>0 ; (closest ? i-- : i++), j--)
 		Vp[cp[i].second] = 0.9;
 }
