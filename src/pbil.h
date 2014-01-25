@@ -61,7 +61,7 @@ void ProbVector::EnemyProb(bool closest) {
 		cp[i] = make_pair(cd[i],i);
 	sort(cp.begin(),cp.end());
 
-	for (int i=(closest ? TR.N-1 : 0), j=TR.N/20 ;
+	for (int i=(closest ? TR.N-1 : 0), j=TR.N/25 ;
 		i>=0 && j>0 ; (closest ? i-- : i++), j--)
 		Vp[cp[i].second] = 0.9;
 }
