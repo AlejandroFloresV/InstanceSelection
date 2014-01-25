@@ -38,7 +38,9 @@ class ProbVector {
 	void setNLR(double nlr) { NLR = nlr; }
 
 	void RandomProb();
+	void EnemyProb(bool);
 	void ClosestEnemyProb();
+	void FarthestEnemyProb();
 	void GenerateSamples();
 	void UpdateVp();
 	Chromosome GetBest() { return GBestC; }
@@ -49,12 +51,27 @@ void ProbVector::RandomProb() {
 		Vp[i] = 0.03 + drand()*0.04;
 }
 
+void ProbVector::EnemyProb(bool closest) {
+
+	Vp = vector<double>(TR.N,0.03);
+	vector<double> cd = NN.ClosestEnemy();
+	vector<pair<double,int> > cp(TR.N);
+
+	for (int i=0 ; i<TR.N ; i++)
+		cp[i] = make_pair(cd[i],i);
+	sort(cp.begin(),cp.end());
+
+	for (int i=(closest ? TR.N-1 : 0), j=TR.N/20 ;
+		i>=0 && j>0 ; (closest ? i-- : i++), j--)
+		Vp[cp[i].second] = 0.9;
+}
+
 void ProbVector::ClosestEnemyProb() {
-	Vp = NN.ClosestEnemy();
-	for (int i=0 ; i<TR.N ; i++) {
-		if (Vp[i]<0.95) Vp[i] = 0.03;
-		else Vp[i] = 0.9;
-	}
+	EnemyProb(true);
+}
+
+void ProbVector::FarthestEnemyProb() {
+	EnemyProb(false);
 }
 
 void ProbVector::GenerateSamples() {
@@ -127,6 +144,16 @@ Chromosome RandomPBIL() {
 Chromosome ClosestEnemyPBIL() {
 	ProbVector vp;
 	vp.ClosestEnemyProb();
+	for (int i=0 ; i<PBIL_MAXITER ; i++) {
+		vp.GenerateSamples();
+		vp.UpdateVp();
+	}
+	return vp.GetBest();
+}
+
+Chromosome FarthestEnemyPBIL() {
+	ProbVector vp;
+	vp.FarthestEnemyProb();
 	for (int i=0 ; i<PBIL_MAXITER ; i++) {
 		vp.GenerateSamples();
 		vp.UpdateVp();

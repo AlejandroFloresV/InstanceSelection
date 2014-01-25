@@ -38,6 +38,8 @@ int main(int argc, char* argv[]) {
 		bestFound = RandomPBIL();
 	} else if (algoStr.compare("ClosestEnemyPBIL")==0) {
 		bestFound = ClosestEnemyPBIL();
+	} else if (algoStr.compare("FarthestEnemyPBIL")==0) {
+		bestFound = FarthestEnemyPBIL();
 	} else if (algoStr.compare("PSO")==0) {
 		bestFound = PSO();
 	} else if (algoStr.compare("GGA")==0) {

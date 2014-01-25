@@ -117,7 +117,7 @@ double OneNN::fitnessAR () {
 
 vector<double> OneNN::ClosestEnemy() {
 	vector<double> CE(TR.N);
-	double minD,maxD,currD;
+	double minD=-1.0,maxD=-1.0,currD;
 	for (int i=0 ; i<TR.N ; i++) {
 		CE[i] = -1.0;
 		for (int j=0 ; j<TR.N ; j++) {
@@ -127,8 +127,12 @@ vector<double> OneNN::ClosestEnemy() {
 					CE[i] = currD;
 			}
 		}
-		minD = min(minD,CE[i]);
-		maxD = max(maxD,CE[i]);
+		if (minD<0.0 || maxD<0.0)
+			minD = maxD = CE[i];
+		else {
+			minD = min(minD,CE[i]);
+			maxD = max(maxD,CE[i]);
+		}
 	}
 	for (int i=0 ; i<TR.N ; i++)
 		CE[i] = 1.0-(CE[i]-minD)/(maxD-minD);
