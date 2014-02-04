@@ -32,21 +32,21 @@ int main(int argc, char* argv[]) {
 	Chromosome bestFound;
 
 	string algoStr(argv[1]);
-	if (algoStr.compare("StandardPBIL")==0) {
+	if (algoStr == "StandardPBIL") {
 		bestFound = StandardPBIL();
-	} else if (algoStr.compare("RandomPBIL")==0) {
+	} else if (algoStr == "RandomPBIL") {
 		bestFound = RandomPBIL();
-	} else if (algoStr.compare("ClosestEnemyPBIL")==0) {
+	} else if (algoStr == "ClosestEnemyPBIL") {
 		bestFound = ClosestEnemyPBIL();
-	} else if (algoStr.compare("FarthestEnemyPBIL")==0) {
+	} else if (algoStr == "FarthestEnemyPBIL") {
 		bestFound = FarthestEnemyPBIL();
-	} else if (algoStr.compare("PSO")==0) {
+	} else if (algoStr == "PSO") {
 		bestFound = PSO();
-	} else if (algoStr.compare("GGA")==0) {
+	} else if (algoStr == "GGA") {
 		bestFound = GGA();
-	} else if (algoStr.compare("SGA")==0) {
+	} else if (algoStr == "SGA") {
 		bestFound = SGA();
-	} else if (algoStr.compare("CHC")==0) {
+	} else if (algoStr == "CHC") {
 		bestFound = CHC();
 	} else {
 		FatalError("The name of the algorithm argument is wrong.");

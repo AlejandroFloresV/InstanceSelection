@@ -56,11 +56,10 @@ int Hamming(Chromosome a, Chromosome b) {
 // +----------------------+
 
 Chromosome TournamentSel(Population *pop) {
-	Population tourPop(TOURNAMENT_K);
+	int indSel = GENETIC_POP;
 	for (int i=0 ; i<TOURNAMENT_K ; i++)
-		tourPop[i] = (*pop)[rand() % GENETIC_POP];
-	sortPopulation(tourPop);
-	return tourPop[0];
+		indSel = min(indSel,rand() % GENETIC_POP);
+	return (*pop)[indSel];
 }
 
 // +----------------------+
