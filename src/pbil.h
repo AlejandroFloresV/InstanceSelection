@@ -18,7 +18,6 @@ class ProbVector {
 	int size,Iter;
 	double MP,MS,LR,NLR;
 	Chromosome GBestC;
-	double GBestF;
 	Population pop;
 
 	public:
@@ -29,7 +28,6 @@ class ProbVector {
 		NLR = 0.075;
 		size = 50;
 		Iter = 0;
-		GBestF = -1.0;
 		Vp = vector<double>(TR.N,0.05);
 		pop = Population(size);
 	}
@@ -79,7 +77,6 @@ void ProbVector::FarthestEnemyProb() {
 
 void ProbVector::GenerateSamples() {
 
-	Iter++;
 	for (int p=0 ; p<size ; p++) {
 		vector<int> currV;
 		for (int i=0 ; i<TR.N ; i++) {
@@ -92,15 +89,13 @@ void ProbVector::GenerateSamples() {
 	sortPopulation(pop);
 
 	// Update Global Best
-	if (GBestF < 0.0 || pop[0].fitness() < GBestF) {
+	if (Iter==0 || pop[0].fitness() < GBestC.fitness())
 		GBestC = pop[0];
-		GBestF = pop[0].fitness();
-	}
+	Iter++;
 }
 
 void ProbVector::GenerateSamplesHUX() {
 
-	Iter++;
 	int s = size/2, p, iA, iB;
 	if (s%2!=0) s++;
 	for (p=0 ; p<s ; p++) {
@@ -122,10 +117,9 @@ void ProbVector::GenerateSamplesHUX() {
 	sortPopulation(pop);
 
 	// Update Global Best
-	if (GBestF < 0.0 || pop[0].fitness() < GBestF) {
+	if (Iter==0 || pop[0].fitness() < GBestC.fitness())
 		GBestC = pop[0];
-		GBestF = pop[0].fitness();
-	}
+	Iter++;
 }
 
 void ProbVector::UpdateVp() {
