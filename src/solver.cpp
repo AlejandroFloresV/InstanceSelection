@@ -9,9 +9,9 @@
 #include "tenfold.h"
 #include "onenn.h"
 #include "chromosome.h"
+#include "genetic.h"
 #include "pbil.h"
 #include "pso.h"
-#include "genetic.h"
 
 using namespace std;
 
@@ -40,6 +40,8 @@ int main(int argc, char* argv[]) {
 		bestFound = ClosestEnemyPBIL();
 	} else if (algoStr == "FarthestEnemyPBIL") {
 		bestFound = FarthestEnemyPBIL();
+	} else if (algoStr == "PBILwithHUX") {
+		bestFound = PBILwithHUX();
 	} else if (algoStr == "PSO") {
 		bestFound = PSO();
 	} else if (algoStr == "GGA") {

@@ -15,10 +15,11 @@ using namespace std;
 class ProbVector {
 
 	vector<double> Vp;
-	int Pop,Iter;
+	int size,Iter;
 	double MP,MS,LR,NLR;
-	Chromosome GBestC,LBestC,LWorstC;
+	Chromosome GBestC;
 	double GBestF;
+	Population pop;
 
 	public:
 	ProbVector() {
@@ -26,12 +27,13 @@ class ProbVector {
 		MS = 0.01;
 		LR = 0.2;
 		NLR = 0.075;
-		Pop = 50;
+		size = 50;
 		Iter = 0;
 		GBestF = -1.0;
 		Vp = vector<double>(TR.N,0.05);
+		pop = Population(size);
 	}
-	void setPop(int p) { Pop = p; }
+	void setSize(int s) { size = s; }
 	void setMP(double mp) { MP = mp; }
 	void setMS(double ms) { MS = ms; }
 	void setLR(double lr) { LR = lr; }
@@ -42,6 +44,7 @@ class ProbVector {
 	void ClosestEnemyProb();
 	void FarthestEnemyProb();
 	void GenerateSamples();
+	void GenerateSamplesHUX();
 	void UpdateVp();
 	Chromosome GetBest() { return GBestC; }
 };
@@ -77,35 +80,67 @@ void ProbVector::FarthestEnemyProb() {
 void ProbVector::GenerateSamples() {
 
 	Iter++;
-	vector<Chromosome> newPop(Pop);
-	for (int p=0 ; p<Pop ; p++) {
+	for (int p=0 ; p<size ; p++) {
 		vector<int> currV;
 		for (int i=0 ; i<TR.N ; i++) {
 			if (drand()<Vp[i])
 				currV.push_back(i);
 		}
-		newPop[p] = Chromosome(currV);
+		pop[p] = Chromosome(currV);
 	}
 
-	sort(newPop.begin(),newPop.end());
-	LBestC  = newPop[0];
-	LWorstC = newPop[Pop-1];
+	sortPopulation(pop);
 
 	// Update Global Best
-	if (GBestF < 0.0 || LBestC.fitness() < GBestF) {
-		GBestC = LBestC;
+	if (GBestF < 0.0 || pop[0].fitness() < GBestF) {
+		GBestC = pop[0];
+		//cout << "Found Local Min " << GBestF << " at iteration " << thisIter << endl;
+	}
+}
+
+void ProbVector::GenerateSamplesHUX() {
+
+	Iter++;
+	int s = size/2, p, iA, iB, threshold = TR.N/4;
+	if (s%2!=0) s++;
+	for (p=0 ; p<s ; p++) {
+		vector<int> currV;
+		for (int i=0 ; i<TR.N ; i++) {
+			if (drand()<Vp[i])
+				currV.push_back(i);
+		}
+		pop[p] = Chromosome(currV);
+	}
+	for (; p<size ; p++) {
+		iA = rand() % s;
+		iB = rand() % s;
+		if (Hamming(pop[iA],pop[iB]) > threshold) {
+			Offspring crossAB = CrossoverHUX(pop[iA],pop[iB]);
+			pop[p] = crossAB.first;
+			pop[p+1] = crossAB.second;
+		}
+	}
+
+	sortPopulation(pop);
+
+	// Update Global Best
+	if (GBestF < 0.0 || pop[0].fitness() < GBestF) {
+		GBestC = pop[0];
 		//cout << "Found Local Min " << GBestF << " at iteration " << thisIter << endl;
 	}
 }
 
 void ProbVector::UpdateVp() {
 
-	LBestC.iterator();
-	LWorstC.iterator();
+	Chromosome
+		*LBestC = &pop[0],
+		*LWorstC = &pop[size-1];
+	(*LBestC).iterator();
+	(*LWorstC).iterator();
 	bool bi,wi;
 	for (int i=0 ; i<TR.N ; i++) {
-		bi = LBestC.next();
-		wi = LWorstC.next();
+		bi = (*LBestC).next();
+		wi = (*LWorstC).next();
 		Vp[i] = Vp[i]*(1.0-LR) + b2i(bi)*LR;
 		if (bi!=wi)
 			Vp[i] = Vp[i]*(1.0-NLR) + b2i(bi)*NLR;
@@ -156,6 +191,15 @@ Chromosome FarthestEnemyPBIL() {
 	vp.FarthestEnemyProb();
 	for (int i=0 ; i<PBIL_MAXITER ; i++) {
 		vp.GenerateSamples();
+		vp.UpdateVp();
+	}
+	return vp.GetBest();
+}
+
+Chromosome PBILwithHUX() {
+	ProbVector vp;
+	for (int i=0 ; i<PBIL_MAXITER ; i++) {
+		vp.GenerateSamplesHUX();
 		vp.UpdateVp();
 	}
 	return vp.GetBest();
