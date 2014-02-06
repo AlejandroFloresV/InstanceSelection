@@ -94,14 +94,14 @@ void ProbVector::GenerateSamples() {
 	// Update Global Best
 	if (GBestF < 0.0 || pop[0].fitness() < GBestF) {
 		GBestC = pop[0];
-		//cout << "Found Local Min " << GBestF << " at iteration " << thisIter << endl;
+		GBestF = pop[0].fitness();
 	}
 }
 
 void ProbVector::GenerateSamplesHUX() {
 
 	Iter++;
-	int s = size/2, p, iA, iB, threshold = TR.N/4;
+	int s = size/2, p, iA, iB;
 	if (s%2!=0) s++;
 	for (p=0 ; p<s ; p++) {
 		vector<int> currV;
@@ -111,14 +111,12 @@ void ProbVector::GenerateSamplesHUX() {
 		}
 		pop[p] = Chromosome(currV);
 	}
-	for (; p<size ; p++) {
+	for (; p<size ; p+=2) {
 		iA = rand() % s;
 		iB = rand() % s;
-		if (Hamming(pop[iA],pop[iB]) > threshold) {
-			Offspring crossAB = CrossoverHUX(pop[iA],pop[iB]);
-			pop[p] = crossAB.first;
-			pop[p+1] = crossAB.second;
-		}
+		Offspring crossAB = CrossoverHUX(pop[iA],pop[iB]);
+		pop[p] = crossAB.first;
+		pop[p+1] = crossAB.second;
 	}
 
 	sortPopulation(pop);
@@ -126,7 +124,7 @@ void ProbVector::GenerateSamplesHUX() {
 	// Update Global Best
 	if (GBestF < 0.0 || pop[0].fitness() < GBestF) {
 		GBestC = pop[0];
-		//cout << "Found Local Min " << GBestF << " at iteration " << thisIter << endl;
+		GBestF = pop[0].fitness();
 	}
 }
 
