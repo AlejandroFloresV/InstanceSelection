@@ -21,11 +21,13 @@ int tenfcv = 0;
 #define ifi(str,var) if (cmd==str) { i++; if (i==argc) FatalError(eP); var=atoi(argv[i]); }
 #define iff(str,var) if (cmd==str) { i++; if (i==argc) FatalError(eP); var=atof(argv[i]); }
 #define ifs(str,var) if (cmd==str) { i++; if (i==argc) FatalError(eP); var=string(argv[i]); }
+#define tryAlg(str,fun) if (algorithm==str) bestFound = fun();
 
 void parseArgs(int argc, char* argv[]) {
 	string eP  = "Parsing the arguments.\n";
 	eP += "Arguments must be bin/solver [-<cmd> <value>] where:\n";
-	eP += "  -alg   Algorithm to run.\n";
+	eP += "  -alg   Algorithm to run. Options:\n";
+	eP += "         GGA, SGA, CHC, PBIL and PSO.\n";
 	eP += "  -f     File from where the data will be loaded.\n";
 	eP += "  -10fcv Index for 10-fcv [0,9] (default 0).\n";
 	eP += "  -iter  Maximum number of iterations (default 10000).\n";
@@ -81,21 +83,13 @@ int main(int argc, char* argv[]) {
 	
 	Chromosome bestFound;
 
-	if (algorithm == "PBIL")
-		bestFound = PBIL();
-	else if (algorithm == "PBILwithHUX")
-		bestFound = PBILwithHUX();
-	else if (algorithm == "PSO")
-		bestFound = PSO();
-	else if (algorithm == "GGA")
-		bestFound = GGA();
-	else if (algorithm == "SGA")
-		bestFound = SGA();
-	else if (algorithm == "CHC")
-		bestFound = CHC();
-	else
-		FatalError("The algorithm specified does not exists.");
-	
+	tryAlg("PBILwithHUX",PBILwithHUX)
+	else tryAlg("PBIL",PBIL)
+	else tryAlg("PSO",PSO)
+	else tryAlg("GGA",GGA)
+	else tryAlg("SGA",SGA)
+	else tryAlg("CHC",CHC)
+	else FatalError("The algorithm specified does not exists.");
 
 	NN.useJust(bestFound.gene);
 
