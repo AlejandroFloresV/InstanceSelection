@@ -9,7 +9,7 @@ Just run `make` in the root folder. This command will compile everything you nee
 
 To run a particular metaheuristic against some of the datasets provided, just type:
 
-	bin/solver bin/solver [-<cmd> <value>]
+	bin/solver [-<cmd> <value>]
 
 Where:
 
