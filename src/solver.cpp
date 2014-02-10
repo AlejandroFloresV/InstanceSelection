@@ -24,7 +24,7 @@ int tenfcv = 0;
 
 void parseArgs(int argc, char* argv[]) {
 	string eP  = "Parsing the arguments.\n";
-	eP += "Arguments must be -<cmd> <value>:\n";
+	eP += "Arguments must be bin/solver [-<cmd> <value>] where:\n";
 	eP += "  -alg   Algorithm to run.\n";
 	eP += "  -f     File from where the data will be loaded.\n";
 	eP += "  -10fcv Index for 10-fcv [0,9] (default 0).\n";
@@ -62,6 +62,7 @@ void parseArgs(int argc, char* argv[]) {
 			else iff("cross",CROSS_PROB)
 			else if (cmd=="nv")
 				verbose = false;
+			else FatalError(eP);
 		} else FatalError(eP);
 	}
 }

@@ -13,9 +13,22 @@ To run a particular metaheuristic against some of the datasets provided, just ty
 
 Where:
 
-- **Algorithm**: `GGA`, `SGA`, `CHC`, `StandardPBIL`, `RandomPBIL`, `ClosestEnemyPBIL` or `PSO`.
-- **Dataset**: `iris`, `wdbc`, `segmentation` or `banana`.
-- **10-fcv set**: a number between [0,9].
+Arguments must be bin/solver [-<cmd> <value>] where:
+  -alg   Algorithm to run.
+  -f     File from where the data will be loaded.
+  -10fcv Index for 10-fcv [0,9] (default 0).
+  -iter  Maximum number of iterations (default 10000).
+  -pop   Size of the population (default 50).
+  -init  Policy of inicialization for the population, options:
+         Random (default), ClosestEnemy, FarthestEnemy.
+  -mp    Mutation probability (default 0.001).
+  -ms    Mutation shift (Only PBIL) (default 0.01).
+  -ls    Learning Rate (Only PBIL) (default 0.2).
+  -nls   Negative Learning Rate (Only PBIL) (default 0.075).
+  -pso   PSO particles (default 15).
+  -c1    Weight for local best (Only PSO) (default 3.0).
+  -c2    Weight for global best (Only PSO) (default 1.0).
+  -cross Crossover probability (default 1.0).
 
 You can also run a *Full Factorial Experiment* for every 10-fcv set by typing:
 
