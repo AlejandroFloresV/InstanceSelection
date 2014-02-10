@@ -19,7 +19,7 @@ Where:
 	-iter    Maximum number of iterations (default 10000).
 	-pop     Size of the population (default 50).
 	-init    Policy of inicialization for the population, options:
-	         Random (default), `ClosestEnemy`, `FarthestEnemy`.
+	         Random (default), ClosestEnemy, FarthestEnemy.
 	-mp      Mutation probability (default 0.001).
 	-ms      Mutation shift (Only PBIL) (default 0.01).
 	-ls      Learning Rate (Only PBIL) (default 0.2).
