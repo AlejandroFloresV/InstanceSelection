@@ -8,8 +8,6 @@
 
 using namespace std;
 
-#define MUTATION_RATE 0.001
-
 class Chromosome {
 	int it,valIt;
 	mutable double fit;
@@ -74,7 +72,7 @@ void Chromosome::mutate() {
 	bool isOn;
 	for (int i=0 ; i<TR.N ; i++) {
 		isOn = this->next();
-		if (drand() < MUTATION_RATE)
+		if (drand() < MUT_PROB)
 			isOn = !isOn;
 		if (isOn)
 			newGene.push_back(i);

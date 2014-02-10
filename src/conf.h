@@ -19,8 +19,28 @@ double drand() {
 
 void FatalError(string str) {
 	printf("FATAL ERROR: %s\n",str.c_str());
-	exit(0);
+	exit(1);
 }
 
 // Common Variables
 int NumClass;
+bool verbose = true;
+
+// GENERAL
+int MAX_ITER = 10000;
+int POP_SIZE = 50;
+double MUT_PROB = 0.001;
+string INIT_TYPE = "Random";
+
+// PBIL
+double MS = 0.01;
+double LR = 0.2;
+double NLR = 0.075;
+
+// PSO
+int PARTICLES = 15;
+double C1 = 3.0;
+double C2 = 1.0;
+
+// GENETIC
+double CROSS_PROB = 1.0;

@@ -15,57 +15,101 @@
 
 using namespace std;
 
+string algorithm, filepath;
+int tenfcv = 0;
+
+#define ifi(str,var) if (cmd==str) { i++; if (i==argc) FatalError(eP); var=atoi(argv[i]); }
+#define iff(str,var) if (cmd==str) { i++; if (i==argc) FatalError(eP); var=atof(argv[i]); }
+#define ifs(str,var) if (cmd==str) { i++; if (i==argc) FatalError(eP); var=string(argv[i]); }
+
+void parseArgs(int argc, char* argv[]) {
+	string eP  = "Parsing the arguments.\n";
+	eP += "Arguments must be -<cmd> <value>:\n";
+	eP += "  -alg   Algorithm to run.\n";
+	eP += "  -f     File from where the data will be loaded.\n";
+	eP += "  -10fcv Index for 10-fcv [0,9] (default 0).\n";
+	eP += "  -iter  Maximum number of iterations (default 10000).\n";
+	eP += "  -pop   Size of the population (default 50).\n";
+	eP += "  -init  Policy of inicialization for the population, options:\n";
+	eP += "         Random (default), ClosestEnemy, FarthestEnemy.\n";
+	eP += "  -mp    Mutation probability (default 0.001).\n";
+	eP += "  -ms    Mutation shift (Only PBIL) (default 0.01).\n";
+	eP += "  -ls    Learning Rate (Only PBIL) (default 0.2).\n";
+	eP += "  -nls   Negative Learning Rate (Only PBIL) (default 0.075).\n";
+	eP += "  -pso   PSO particles (default 15).\n";
+	eP += "  -c1    Weight for local best (Only PSO) (default 3.0).\n";
+	eP += "  -c2    Weight for global best (Only PSO) (default 1.0).\n";
+	eP += "  -cross Crossover probability (default 1.0).";
+	for (int i=1 ; i<argc ; i++) {
+		if (argv[i][0]=='-') {
+			if (strlen(argv[i])<2)
+				FatalError(eP);
+
+			string cmd(&argv[i][1]);
+			ifs("alg",algorithm)
+			else ifs("f",filepath)
+			else ifi("10fcv",tenfcv)
+			else ifi("iter",MAX_ITER)
+			else ifi("pop",POP_SIZE)
+			else ifs("init",INIT_TYPE)
+			else iff("mp",MUT_PROB)
+			else iff("ms",MS)
+			else iff("lr",LR)
+			else iff("nlr",NLR)
+			else ifi("pso",PARTICLES)
+			else iff("c1",C1)
+			else iff("c2",C2)
+			else iff("cross",CROSS_PROB)
+			else if (cmd=="nv")
+				verbose = false;
+		} else FatalError(eP);
+	}
+}
+
 int main(int argc, char* argv[]) {
 
-	if (argc!=4)
-		FatalError("Wrong # of arguments. Must be <algorithm> <dataset> <# 10-fcv set>.");
+	parseArgs(argc,argv);
 
-	int tenfcv = atoi(argv[3]);
 	if (tenfcv<0 || 9<tenfcv)
 		FatalError("The index for 10-fcv must be in the range [0,9].");
 
 	srand(time(NULL));
 
-	LoadData(string(argv[2]),tenfcv);
+	LoadData(filepath,tenfcv);
 	NN.CalcDist();
 	
 	Chromosome bestFound;
 
-	string algoStr(argv[1]);
-	if (algoStr == "StandardPBIL") {
-		bestFound = StandardPBIL();
-	} else if (algoStr == "RandomPBIL") {
-		bestFound = RandomPBIL();
-	} else if (algoStr == "ClosestEnemyPBIL") {
-		bestFound = ClosestEnemyPBIL();
-	} else if (algoStr == "FarthestEnemyPBIL") {
-		bestFound = FarthestEnemyPBIL();
-	} else if (algoStr == "PBILwithHUX") {
+	if (algorithm == "PBIL")
+		bestFound = PBIL();
+	else if (algorithm == "PBILwithHUX")
 		bestFound = PBILwithHUX();
-	} else if (algoStr == "PSO") {
+	else if (algorithm == "PSO")
 		bestFound = PSO();
-	} else if (algoStr == "GGA") {
+	else if (algorithm == "GGA")
 		bestFound = GGA();
-	} else if (algoStr == "SGA") {
+	else if (algorithm == "SGA")
 		bestFound = SGA();
-	} else if (algoStr == "CHC") {
+	else if (algorithm == "CHC")
 		bestFound = CHC();
-	} else {
-		FatalError("The name of the algorithm argument is wrong.");
-	}
+	else
+		FatalError("The algorithm specified does not exists.");
+	
 
 	NN.useJust(bestFound.gene);
 
-	printf("%.2lf\n", 100.0-100.0*(double)bestFound.on/TR.N);
-	printf("%.2lf\n", 100.0*NN.errorTR());
-	printf("%.2lf\n", 100.0*NN.errorTS());
-
-	//printf("----------------------\n");
-	//printf("Reduction      %6.2lf%%\n", 100.0-100.0*(double)bestFound.on/TR.N);
-	//printf("Training Error %6.2lf%%\n", 100.0*NN.errorTR());
-	//printf("Test Error     %6.2lf%%\n", 100.0*NN.errorTS());
-	//printf("----------------------\n");
-	//bestFound.print();
+	if (verbose) {
+		printf("----------------------\n");
+		printf("Reduction      %6.2lf%%\n", 100.0-100.0*(double)bestFound.on/TR.N);
+		printf("Training Error %6.2lf%%\n", 100.0*NN.errorTR());
+		printf("Test Error     %6.2lf%%\n", 100.0*NN.errorTS());
+		printf("----------------------\n");
+		bestFound.print();
+	} else {
+		printf("%.2lf\n", 100.0-100.0*(double)bestFound.on/TR.N);
+		printf("%.2lf\n", 100.0*NN.errorTR());
+		printf("%.2lf\n", 100.0*NN.errorTS());
+	}
 	
 	return 0;
 }

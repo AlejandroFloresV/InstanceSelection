@@ -17,18 +17,14 @@ vector<int> pso_partition;
 class Particle {
 	
 	vector<double> V,X;
-	int Pop;
 	Chromosome *GBestC,LBestC;
 	double *GBestF,LBestF,c1,c2;
 
 	public:
 	Particle() {}
 	Particle(Chromosome *gbc, double *gbf, int ind) {
-		Pop = 40;
 		GBestC = gbc;
 		GBestF = gbf;
-		c1 = 3.0;
-		c2 = 1.0;
 		(*GBestF) = LBestF = -1.0;
 		X = vector<double>(TR.N);
 		V = vector<double>(TR.N);
@@ -39,9 +35,6 @@ class Particle {
 			V[i] = drand()*0.06-0.03;
 		}
 	}
-	void setPop(int p) { Pop = p; }
-	void setC1(int c) { c1 = c; }
-	void setC2(int c) { c2 = c; }
 
 	void GenerateSamples();
 	void UpdateParticle(double);
@@ -51,7 +44,7 @@ void Particle::GenerateSamples() {
 	double currF, bestF;
 	vector<int> bestV;
 
-	for (int p=0 ; p<Pop ; p++) {
+	for (int p=0 ; p<POP_SIZE ; p++) {
 		vector<int> currV;
 		for (int i=0 ; i<TR.N ; i++) {
 			if (drand()<X[i])
@@ -84,7 +77,7 @@ void Particle::UpdateParticle(double w) {
 	for (int i=0 ; i<TR.N ; i++) {
 		li = LBestC.next();
 		gi = GBestC->next();
-		V[i] = w*V[i] + c1*drand()*(b2d(li)-X[i]) + c2*drand()*(b2d(gi)-X[i]);
+		V[i] = w*V[i] + C1*drand()*(b2d(li)-X[i]) + C2*drand()*(b2d(gi)-X[i]);
 		V[i] = max(-0.1,min(0.1,V[i]));
 		X[i] = max(0.0,min(1.0,X[i]+V[i]));
 	}
@@ -94,26 +87,23 @@ void Particle::UpdateParticle(double w) {
 // | PSO ALGORITHM |
 // +---------------+
 
-#define PART_PSO 15
-#define ITER_PSO 250
-
 Chromosome PSO() {
 	Chromosome bestC;
 	double bestF,w;
 	
 	pso_partition.clear();
 	for (int i=0 ; i<TR.N ; i++)
-		pso_partition.push_back(rand()%PART_PSO);
+		pso_partition.push_back(rand() % PARTICLES);
 
-	Particle p[PART_PSO];
-	for (int j=0 ; j<PART_PSO ; j++)
+	vector<Particle> p(PARTICLES);
+	for (int j=0 ; j<PARTICLES ; j++)
 		p[j] = Particle(&bestC,&bestF,j);
 	
-	for (int i=0 ; i<ITER_PSO ; i++) {
-		for (int j=0 ; j<PART_PSO ; j++) {
+	for (int i=0 ; i<MAX_ITER ; i++) {
+		for (int j=0 ; j<PARTICLES ; j++) {
 			p[j].GenerateSamples();
 			p[j].UpdateParticle(w);
-			w = 1.5*((double)(ITER_PSO-i-1))/((double)ITER_PSO+1.0);
+			w = 1.5*((double)(MAX_ITER-i-1))/((double)MAX_ITER+1.0);
 		}
 	}
 	return bestC;
