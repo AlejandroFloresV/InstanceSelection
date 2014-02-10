@@ -13,7 +13,8 @@ To run a particular metaheuristic against some of the datasets provided, just ty
 
 Where:
 
-	-alg     Algorithm to run.
+	-alg     Algorithm to run. Options:
+	         GGA, SGA, CHC, PBIL and PSO.
 	-f       File from where the data will be loaded.
 	-10fcv   Index for 10-fcv [0,9] (default 0).
 	-iter    Maximum number of iterations (default 10000).
