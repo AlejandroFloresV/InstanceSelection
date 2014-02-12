@@ -105,6 +105,6 @@ int main(int argc, char* argv[]) {
 		printf("%.2lf\n", 100.0*NN.errorTR());
 		printf("%.2lf\n", 100.0*NN.errorTS());
 	}
-	
+
 	return 0;
 }

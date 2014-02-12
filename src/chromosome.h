@@ -77,7 +77,8 @@ void Chromosome::mutate() {
 		if (isOn)
 			newGene.push_back(i);
 	}
-	gene = newGene;
+	this->gene = newGene;
+	this->on = newGene.size();
 }
 
 void Chromosome::print() {

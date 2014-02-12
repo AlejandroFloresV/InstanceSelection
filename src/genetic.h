@@ -162,8 +162,10 @@ Chromosome GGA() {
 			}
 			newPop[ j ] = cA;
 			newPop[ j ].mutate();
+			if (newPop[ j ].fitness()==0.0298507) cout << i << " " << j << endl;
 			newPop[j+1] = cB;
 			newPop[j+1].mutate();
+			if (newPop[j+1].fitness()==0.0298507) cout << i << " " << j << endl;
 		}
 		pop = newPop;
 		sortPopulation(pop);
