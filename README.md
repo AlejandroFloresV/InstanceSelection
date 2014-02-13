@@ -23,8 +23,8 @@ Where:
 	         Random (default), ClosestEnemy, FarthestEnemy.
 	-mp      Mutation probability (default 0.001).
 	-ms      Mutation shift (Only PBIL) (default 0.01).
-	-ls      Learning Rate (Only PBIL) (default 0.2).
-	-nls     Negative Learning Rate (Only PBIL) (default 0.075).
+	-lr      Learning Rate (Only PBIL) (default 0.2).
+	-nlr     Negative Learning Rate (Only PBIL) (default 0.075).
 	-pso     PSO particles (default 15).
 	-c1      Weight for local best (Only PSO) (default 3.0).
 	-c2      Weight for global best (Only PSO) (default 1.0).

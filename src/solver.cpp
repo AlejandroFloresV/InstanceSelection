@@ -36,8 +36,8 @@ void parseArgs(int argc, char* argv[]) {
 	eP += "         Random (default), ClosestEnemy, FarthestEnemy.\n";
 	eP += "  -mp    Mutation probability (default 0.001).\n";
 	eP += "  -ms    Mutation shift (Only PBIL) (default 0.01).\n";
-	eP += "  -ls    Learning Rate (Only PBIL) (default 0.2).\n";
-	eP += "  -nls   Negative Learning Rate (Only PBIL) (default 0.075).\n";
+	eP += "  -lr    Learning Rate (Only PBIL) (default 0.2).\n";
+	eP += "  -nlr   Negative Learning Rate (Only PBIL) (default 0.075).\n";
 	eP += "  -pso   PSO particles (default 15).\n";
 	eP += "  -c1    Weight for local best (Only PSO) (default 3.0).\n";
 	eP += "  -c2    Weight for global best (Only PSO) (default 1.0).\n";
