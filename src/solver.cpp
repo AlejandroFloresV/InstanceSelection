@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
 	RUN_SEED = (unsigned int)time(NULL);
 	parseArgs(argc,argv);
 	srand(RUN_SEED);
-	printf("Seed:%d\n",RUN_SEED);
+	if (verbose) printf("Seed:%d\n",RUN_SEED);
 
 	if (tenfcv<0 || 9<tenfcv)
 		FatalError("The index for 10-fcv must be in the range [0,9].");
