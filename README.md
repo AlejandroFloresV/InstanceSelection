@@ -18,6 +18,8 @@ Where:
 	-f       File from where the data will be loaded.
 	-10fcv   Index for 10-fcv [0,9] (default 0).
 	-iter    Maximum number of iterations (default 10000).
+	-seed    An unsigned integer value to be used as seed by the
+	         pseudo-random number generator (default time(NULL)).
 	-pop     Size of the population (default 50).
 	-init    Policy of inicialization for the population, options:
 	         Random (default), ClosestEnemy, FarthestEnemy.

@@ -25,6 +25,7 @@ void FatalError(string str) {
 // Common Variables
 int NumClass;
 bool verbose = true;
+unsigned int RUN_SEED;
 
 // GENERAL
 int MAX_ITER = 10000;

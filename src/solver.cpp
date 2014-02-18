@@ -31,6 +31,8 @@ void parseArgs(int argc, char* argv[]) {
 	eP += "  -f     File from where the data will be loaded.\n";
 	eP += "  -10fcv Index for 10-fcv [0,9] (default 0).\n";
 	eP += "  -iter  Maximum number of iterations (default 10000).\n";
+	eP += "  -seed  An unsigned integer value to be used as seed by the\n";
+	eP += "         pseudo-random number generator (default time(NULL)).\n";
 	eP += "  -pop   Size of the population (default 50).\n";
 	eP += "  -init  Policy of inicialization for the population, options:\n";
 	eP += "         Random (default), ClosestEnemy, FarthestEnemy.\n";
@@ -52,6 +54,7 @@ void parseArgs(int argc, char* argv[]) {
 			else ifs("f",filepath)
 			else ifi("10fcv",tenfcv)
 			else ifi("iter",MAX_ITER)
+			else ifi("seed",RUN_SEED)
 			else ifi("pop",POP_SIZE)
 			else ifs("init",INIT_TYPE)
 			else iff("mp",MUT_PROB)
@@ -71,12 +74,13 @@ void parseArgs(int argc, char* argv[]) {
 
 int main(int argc, char* argv[]) {
 
+	RUN_SEED = (unsigned int)time(NULL);
 	parseArgs(argc,argv);
+	srand(RUN_SEED);
+	printf("Seed:%d\n",RUN_SEED);
 
 	if (tenfcv<0 || 9<tenfcv)
 		FatalError("The index for 10-fcv must be in the range [0,9].");
-
-	srand(time(NULL));
 
 	LoadData(filepath,tenfcv);
 	NN.CalcDist();
