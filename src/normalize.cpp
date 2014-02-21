@@ -18,6 +18,7 @@ double maxA[MAXATTR];
 double minA[MAXATTR];
 map<string,char> mClass;
 int N, K, ind, rows;
+int count10fcv[10];
 
 void addClass(string str) {
 	if (mClass.find(str) == mClass.end()) {
@@ -56,6 +57,9 @@ int main (int argc, char *argv[]) {
 		if (rowInd[i]=='.') K++;
 	}
 
+	for (int i=0 ; i<10 ; i++)
+		count10fcv[i] = 0;
+
 	while (!feof(src)) {
 		for (int i=0,k=0 ; i<rows ; i++) {
 			if (rowInd[i]=='c') {
@@ -85,8 +89,18 @@ int main (int argc, char *argv[]) {
 
 	fprintf(dst,"%d %d\n",N,K);
 
-	srand(time(NULL));
+	int seed = time(NULL);
+	srand(seed);
 
+	for (int n=0 ; n<N ; n++)
+		count10fcv[rand() % 10]++;
+
+	fprintf(dst,"%d",count10fcv[0]);
+	for (int i=1 ; i<10 ; i++)
+		fprintf(dst," %d",count10fcv[i]);
+	fprintf(dst,"\n");
+
+	srand(seed);
 	ind = 0;
 	for (int n=0 ; n<N ; n++) {
 		fprintf(dst,"%d ",rand() % 10);

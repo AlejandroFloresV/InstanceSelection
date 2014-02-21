@@ -9,7 +9,7 @@
 
 using namespace std;
 
-double DistTable[MAXINST][MAXINST];
+double** DistTable;
 
 double dist(double *a, double *b) {
 	double d = 0.0;
@@ -39,6 +39,11 @@ class OneNN {
 } NN;
 
 void OneNN::CalcDist () {
+
+	DistTable = new double*[TR.N];
+	for (int i=0 ; i<TR.N ; i++)
+		DistTable[i] = new double[TR.N];
+
 	for (int i=0 ; i<TR.N ; i++) {
 		DistTable[i][i] = 0.0;
 		for (int j=i+1 ; j<TR.N ; j++)

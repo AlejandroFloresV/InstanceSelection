@@ -12,9 +12,9 @@ using namespace std;
 #define MAXINST 100000
 #define MAXATTR 100
 
-double setAttr[MAXINST * MAXATTR];
-char   setClass[MAXINST];
-int    originalIndex[MAXINST];
+double* setAttr;
+char* setClass;
+int* originalIndex;
 
 class InstanceSet {
 	public:
@@ -46,14 +46,27 @@ void LoadData (string path, int testIndex) {
 	if (src==NULL)
 		FatalError("Error opening file");
 	
-	int N,temp,trInd=0,tsInd=0;
+	int N,temp,trInd,tsInd;
 	fscanf(src,"%d%d",&N,&NumClass);
 
-	TR = InstanceSet(N,0);
-	TS = InstanceSet(N,N-(N/10));
+	trInd = tsInd = 0;
+	for (int i=0 ; i<10 ; i++) {
+		fscanf(src,"%d",&temp);
+		if (i == testIndex)
+			tsInd += temp;
+		else trInd += temp;
+	}
+	
+	setAttr = new double[N*NumClass];
+	setClass = new char[N];
+	originalIndex = new int[N];
+
+	TR = InstanceSet(trInd,0);
+	TS = InstanceSet(tsInd,trInd);
 
 	double *attr;
 	char *clss;
+	trInd = tsInd = 0;
 	for (int n=0 ; n<N ; n++) {
 		fscanf(src,"%d",&temp);
 		if (temp == testIndex) {
@@ -70,9 +83,6 @@ void LoadData (string path, int testIndex) {
 		fscanf(src,"%d",&temp);
 		*clss = (char)temp;
 	}
-
-	TR.N = trInd;
-	TS.N = tsInd;
 
 	fclose(src);
 }
