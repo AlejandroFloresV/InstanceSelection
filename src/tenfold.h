@@ -9,30 +9,25 @@
 
 using namespace std;
 
-#define MAXINST 100000
-#define MAXATTR 100
-
-double* setAttr;
-char* setClass;
-int* originalIndex;
-
 class InstanceSet {
-	public:
-	int N,begin;
-	char *Class;
-	int *Index;
-	InstanceSet(){}
-	InstanceSet(int n, int b) : N(n) {
-		begin = b*NumClass;
-		Class = setClass+b;
-		Index = originalIndex+b;
-	}
-	double* operator[](const int&);
-} TR,TS;
 
-double* InstanceSet::operator[] (const int& ind) {
-	return setAttr+begin+NumClass*ind;
-}
+	public:
+	int N;
+	double* Attr;
+	char* Class;
+	int *Index;
+
+	InstanceSet(){}
+	InstanceSet(int n, int a) : N(n) {
+		Attr = new double[n*a];
+		Class = new char[n];
+		Index = new int[n];
+	}
+	double* operator[](const int& ind) {
+		return &(this->Attr[NumClass*ind]);
+	}
+
+} TR,TS;
 
 void LoadData (string path, int testIndex) {
 
@@ -56,13 +51,9 @@ void LoadData (string path, int testIndex) {
 			tsInd += temp;
 		else trInd += temp;
 	}
-	
-	setAttr = new double[N*NumClass];
-	setClass = new char[N];
-	originalIndex = new int[N];
 
-	TR = InstanceSet(trInd,0);
-	TS = InstanceSet(tsInd,trInd);
+	TR = InstanceSet(trInd,NumClass);
+	TS = InstanceSet(tsInd,NumClass);
 
 	double *attr;
 	char *clss;
@@ -70,16 +61,16 @@ void LoadData (string path, int testIndex) {
 	for (int n=0 ; n<N ; n++) {
 		fscanf(src,"%d",&temp);
 		if (temp == testIndex) {
-			clss = TS.Class + tsInd;
 			TS.Index[tsInd] = n;
+			clss = TS.Class + tsInd;
 			attr = TS[tsInd++];
 		} else {
-			clss = TR.Class + trInd;
 			TR.Index[trInd] = n;
+			clss = TR.Class + trInd;
 			attr = TR[trInd++];
 		}
 		for (int k=0 ; k<NumClass ; k++)
-			fscanf(src,"%lf",attr+k);
+			fscanf(src,"%lf",&attr[k]);
 		fscanf(src,"%d",&temp);
 		*clss = (char)temp;
 	}
