@@ -92,11 +92,15 @@ int Hamming(Chromosome a, Chromosome b) {
 // | Selection Algorithms |
 // +----------------------+
 
-Chromosome TournamentSel(Population *pop) {
+int TournamentSel() {
 	int indSel = POP_SIZE;
 	for (int i=0 ; i<TOURNAMENT_K ; i++)
 		indSel = min(indSel,rand() % POP_SIZE);
-	return (*pop)[indSel];
+	return indSel;
+}
+
+Chromosome TournamentSel(Population *pop) {
+	return (*pop)[TournamentSel()];
 }
 
 // +----------------------+
@@ -155,15 +159,15 @@ Chromosome GGA() {
 		for (int j=0 ; j<POP_SIZE ; j+=2) {
 			cA = TournamentSel(&pop);
 			cB = TournamentSel(&pop);
-			Offspring crossAB = CrossoverOnePoint(cA,cB);
 			if (drand() < CROSS_PROB) {
+				Offspring crossAB = CrossoverOnePoint(cA,cB);
 				cA = crossAB.first;
 				cB = crossAB.second;
 			}
-			newPop[ j ] = cA;
-			newPop[ j ].mutate();
+			cA.mutate();
+			newPop[j] = cA;
+			cB.mutate();
 			newPop[j+1] = cB;
-			newPop[j+1].mutate();
 		}
 		pop = newPop;
 		sortPopulation(pop);
@@ -177,24 +181,32 @@ Chromosome GGA() {
 Chromosome SGA() {
 
 	Chromosome best, cA, cB;
-	Population pop = initPop();
+	Population pop = initPop(),
+		temp = Population(4);
+	int iA, iB;
 	
 	sortPopulation(pop);
 	best = pop[0];
 
 	for (int i=0 ; i<MAX_ITER ; i++) {
-		cA = TournamentSel(&pop);
-		cB = TournamentSel(&pop);
-		Offspring crossAB = CrossoverOnePoint(cA,cB);
-		crossAB.first.mutate();
-		crossAB.second.mutate();
-		pop.push_back(crossAB.first);
-		pop.push_back(crossAB.second);
+		iA = TournamentSel();
+		iB = TournamentSel();
+		temp[0] = pop[iA];
+		temp[1] = pop[iB];
+		if (drand() < CROSS_PROB) {
+			Offspring crossAB = CrossoverOnePoint(temp[0],temp[1]);
+			temp[2] = crossAB.first;
+			temp[3] = crossAB.second;
+		} else {
+			temp[2] = pop[iA];
+			temp[3] = pop[iB];
+		}
+		temp[2].mutate();
+		temp[3].mutate();
+		sortPopulation(temp);
+		pop[iA] = temp[0];
+		pop[iB] = temp[1];
 		sortPopulation(pop);
-		pop.pop_back();
-		pop.pop_back();
-		if (pop[0].fitness() < best.fitness())
-			best = pop[0];
 	}
 
 	return best;
