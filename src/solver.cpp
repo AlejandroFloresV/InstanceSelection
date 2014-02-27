@@ -2,6 +2,7 @@
 #include<cstdio>
 #include<cstdlib>
 #include<climits>
+#include<cstring>
 #include<algorithm>
 #include<vector>
 #include<set>
