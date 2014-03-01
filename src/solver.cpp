@@ -83,6 +83,7 @@ int main(int argc, char* argv[]) {
 	if (tenfcv<0 || 9<tenfcv)
 		FatalError("The index for 10-fcv must be in the range [0,9].");
 
+	clock_t start = clock(), end;
 	LoadData(filepath,tenfcv);
 	NN.CalcDist();
 	
@@ -96,18 +97,21 @@ int main(int argc, char* argv[]) {
 	else tryAlg("CHC",CHC)
 	else FatalError("The algorithm specified does not exists.");
 
+	end = clock();
 	NN.useJust(bestFound.gene);
 
 	if (verbose) {
-		printf("----------------------\n");
-		printf("Reduction      %6.2lf%%\n", 100.0-100.0*(double)bestFound.on/TR.N);
-		printf("Training Error %6.2lf%%\n", 100.0*NN.errorTR());
-		printf("Test Error     %6.2lf%%\n", 100.0*NN.errorTS());
-		printf("----------------------\n");
+		printf("------------------------\n");
+		printf("Reduction        %6.2lf%%\n", 100.0-100.0*(double)bestFound.on/TR.N);
+		printf("Training Error   %6.2lf%%\n", 100.0*NN.errorTR());
+		printf("Test Error       %6.2lf%%\n", 100.0*NN.errorTS());
+		printf("Elapsed time     %6.2lfs\n", (double)(end-start)/CLOCKS_PER_SEC);
+		printf("------------------------\n");
 		bestFound.print();
 	} else {
-		printf("%.2lf\n", 100.0-100.0*(double)bestFound.on/TR.N);
-		printf("%.2lf\n", 100.0*NN.errorTR());
+		printf("%.2lf\t",(double)(end-start)/CLOCKS_PER_SEC);
+		printf("%.2lf\t", 100.0-100.0*(double)bestFound.on/TR.N);
+		printf("%.2lf\t", 100.0*NN.errorTR());
 		printf("%.2lf\n", 100.0*NN.errorTS());
 	}
 
