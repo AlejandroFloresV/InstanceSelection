@@ -17,15 +17,15 @@ vector<int> pso_partition;
 class Particle {
 	
 	vector<double> V,X;
-	Chromosome *GBestC,LBestC;
-	double *GBestF,LBestF,c1,c2;
+	Chromosome *GBest,LBest;
+	double c1,c2;
+	int Iter;
 
 	public:
 	Particle() {}
-	Particle(Chromosome *gbc, double *gbf, int ind) {
-		GBestC = gbc;
-		GBestF = gbf;
-		(*GBestF) = LBestF = -1.0;
+	Particle(Chromosome *gbc, int ind) {
+		GBest = gbc;
+		Iter = 0;
 		X = vector<double>(TR.N);
 		V = vector<double>(TR.N);
 		for (int i=0 ; i<TR.N ; i++) {
@@ -41,42 +41,30 @@ class Particle {
 };
 
 void Particle::GenerateSamples() {
-	double currF, bestF;
-	vector<int> bestV;
 
+	Chromosome bc, cc;
 	for (int p=0 ; p<POP_SIZE ; p++) {
-		vector<int> currV;
-		for (int i=0 ; i<TR.N ; i++) {
-			if (drand()<X[i])
-				currV.push_back(i);
-		}
-		NN.useJust(currV);
-		currF = NN.fitnessAR();
-		if (p==0 || currF < bestF) {
-			bestF = currF;
-			bestV = currV;
-		}
+		cc = Chromosome(V);
+		if (p==0 || cc < bc)
+			bc = cc;
 	}
 
-	// Update Local & Global Best
-	if (LBestF<0.0 || bestF < LBestF) {
-		LBestF = bestF;
-		LBestC = Chromosome(bestV);
-		if (*GBestF<0.0 || LBestF < *GBestF) {
-			*GBestF = LBestF;
-			*GBestC = LBestC;
-			//cout << "Found Local Min " << *GBestF << endl;
-		}
+	// Update Global Best
+	if (Iter==0 || bc < LBest) {
+		LBest = bc;
+		if (Iter==0 || bc < *GBest)
+			*GBest = bc;
 	}
+	Iter++;
 }
 
 void Particle::UpdateParticle(double w) {
-	LBestC.iterator();
-	GBestC->iterator();
+	LBest.iterator();
+	GBest->iterator();
 	bool li,gi;
 	for (int i=0 ; i<TR.N ; i++) {
-		li = LBestC.next();
-		gi = GBestC->next();
+		li = LBest.next();
+		gi = GBest->next();
 		V[i] = w*V[i] + C1*drand()*(b2d(li)-X[i]) + C2*drand()*(b2d(gi)-X[i]);
 		V[i] = max(-0.1,min(0.1,V[i]));
 		X[i] = max(0.0,min(1.0,X[i]+V[i]));
@@ -89,7 +77,7 @@ void Particle::UpdateParticle(double w) {
 
 Chromosome PSO() {
 	Chromosome bestC;
-	double bestF,w;
+	double w;
 	
 	pso_partition.clear();
 	for (int i=0 ; i<TR.N ; i++)
@@ -97,7 +85,7 @@ Chromosome PSO() {
 
 	vector<Particle> p(PARTICLES);
 	for (int j=0 ; j<PARTICLES ; j++)
-		p[j] = Particle(&bestC,&bestF,j);
+		p[j] = Particle(&bestC,j);
 	
 	for (int i=0 ; i<MAX_ITER ; i++) {
 		for (int j=0 ; j<PARTICLES ; j++) {

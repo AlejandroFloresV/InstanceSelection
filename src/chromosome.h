@@ -9,23 +9,31 @@
 using namespace std;
 
 class Chromosome {
-	int it,valIt;
+	int on, it, valIt;
 	mutable double fit;
-	public:
-	int on;
 	vector<int> gene;
-	Chromosome() {}
+
+	public:
+	Chromosome();
 	Chromosome(int);
-	Chromosome(vector<int>,double);
+	Chromosome(vector<int>);
+	Chromosome(vector<double>);
 	double fitness() const;
 	void iterator();
 	bool next();
 	void mutate();
 	void print();
+	int size() { return on; }
+	vector<int> get() { return gene; }
 	bool operator<(const Chromosome& val) const {
 		return fitness() < val.fitness();
 	}
 };
+
+Chromosome::Chromosome() {
+	fit = -1.0;
+	on = it = valIt = 0;
+}
 
 Chromosome::Chromosome(int _on) {
 	on = _on;
@@ -37,23 +45,25 @@ Chromosome::Chromosome(int _on) {
 	gene = vector<int>(m.begin(),m.end());
 }
 
-Chromosome::Chromosome(vector<int> genesOn, double _fit = -1.0) {
-	fit = _fit;
+Chromosome::Chromosome(vector<int> _gene) {
+	fit = -1.0;
 	it = valIt = 0;
-	on = genesOn.size();
-	gene = genesOn;
+	on = _gene.size();
+	gene = _gene;
 }
 
-double Chromosome::fitness() const {
-	if (fit < 0.0) {
-		NN.useJust(gene);
-		fit = NN.fitnessAR();
-	}
-	return fit;
+Chromosome::Chromosome(vector<double> vp) {
+	fit = -1.0;
+	it = on = 0;
+	for (int i=0 ; i<TR.N ; i++)
+		if (drand() < vp[i]) {
+			gene.push_back(i);
+			on++;
+		}
 }
 
 void Chromosome::iterator() {
-	valIt = it = 0;
+	it = valIt = 0;
 }
 
 bool Chromosome::next() {
@@ -67,18 +77,19 @@ bool Chromosome::next() {
 }
 
 void Chromosome::mutate() {
-	this->iterator();
+	iterator();
 	vector<int> newGene;
 	bool isOn;
 	for (int i=0 ; i<TR.N ; i++) {
-		isOn = this->next();
+		isOn = next();
 		if (drand() < MUT_PROB)
 			isOn = !isOn;
 		if (isOn)
 			newGene.push_back(i);
 	}
-	this->gene = newGene;
-	this->on = newGene.size();
+	gene = newGene;
+	on = newGene.size();
+	fit = -1.0;
 }
 
 void Chromosome::print() {

@@ -8,8 +8,8 @@
 #include<set>
 #include "conf.h"
 #include "tenfold.h"
-#include "onenn.h"
 #include "chromosome.h"
+#include "onenn.h"
 #include "genetic.h"
 #include "pbil.h"
 #include "pso.h"
@@ -75,7 +75,7 @@ void parseArgs(int argc, char* argv[]) {
 
 int main(int argc, char* argv[]) {
 
-	RUN_SEED = (unsigned int)time(NULL);
+	RUN_SEED = time(NULL);
 	parseArgs(argc,argv);
 	srand(RUN_SEED);
 	if (verbose) printf("Seed:%d\n",RUN_SEED);
@@ -98,11 +98,11 @@ int main(int argc, char* argv[]) {
 	else FatalError("The algorithm specified does not exists.");
 
 	end = clock();
-	NN.useJust(bestFound.gene);
+	NN.useJust(bestFound);
 
 	if (verbose) {
 		printf("------------------------\n");
-		printf("Reduction        %6.2lf%%\n", 100.0-100.0*(double)bestFound.on/TR.N);
+		printf("Reduction        %6.2lf%%\n", 100.0-100.0*(double)bestFound.size()/TR.N);
 		printf("Training Error   %6.2lf%%\n", 100.0*NN.errorTR());
 		printf("Test Error       %6.2lf%%\n", 100.0*NN.errorTS());
 		printf("Elapsed time     %6.2lfs\n", (double)(end-start)/CLOCKS_PER_SEC);
@@ -110,10 +110,10 @@ int main(int argc, char* argv[]) {
 		bestFound.print();
 	} else {
 		printf("%.2lf\t",(double)(end-start)/CLOCKS_PER_SEC);
-		printf("%.2lf\t", 100.0-100.0*(double)bestFound.on/TR.N);
+		printf("%.2lf\t", 100.0-100.0*(double)bestFound.size()/TR.N);
 		printf("%.2lf\t", 100.0*NN.errorTR());
 		printf("%.2lf\n", 100.0*NN.errorTS());
 	}
-
+	
 	return 0;
 }

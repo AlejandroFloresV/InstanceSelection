@@ -55,14 +55,8 @@ Population initPopEnemyProb(bool closest) {
 		Vp[cp[i].second] = 0.9;
 
 	Population pop(POP_SIZE);
-	for (int i=0 ; i<POP_SIZE ; i++) {
-		vector<int> v;
-		for (int j=0 ; j<TR.N ; j++) {
-			if (drand() < Vp[j])
-				v.push_back(j);
-		}
-		pop[i] = Chromosome(v);
-	}
+	for (int i=0 ; i<POP_SIZE ; i++)
+		pop[i] = Chromosome(Vp);
 	return pop;
 }
 
@@ -171,7 +165,7 @@ Chromosome GGA() {
 		}
 		pop = newPop;
 		sortPopulation(pop);
-		if (pop[0].fitness() < best.fitness())
+		if (pop[0] < best)
 			best = pop[0];
 	}
 
@@ -234,7 +228,7 @@ Chromosome CHC() {
 		}
 		
 		sortPopulation(pop);
-		if (pop[0].fitness() < best.fitness())
+		if (pop[0] < best)
 			best = pop[0];
 
 		if (pop.size()==POP_SIZE) {

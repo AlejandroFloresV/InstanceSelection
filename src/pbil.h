@@ -14,11 +14,10 @@ using namespace std;
 
 class ProbVector {
 
-	vector<double> Vp;
-	int size,Iter;
-	double MP,MS,LR,NLR;
+	int Iter;
 	Chromosome GBestC;
 	Population pop;
+	vector<double> Vp;
 
 	public:
 	ProbVector() {
@@ -58,19 +57,12 @@ void ProbVector::EnemyProb(bool closest) {
 
 void ProbVector::GenerateSamples() {
 
-	for (int p=0 ; p<POP_SIZE ; p++) {
-		vector<int> currV;
-		for (int i=0 ; i<TR.N ; i++) {
-			if (drand()<Vp[i])
-				currV.push_back(i);
-		}
-		pop[p] = Chromosome(currV);
-	}
-
+	for (int p=0 ; p<POP_SIZE ; p++)
+		pop[p] = Chromosome(Vp);
 	sortPopulation(pop);
 
 	// Update Global Best
-	if (Iter==0 || pop[0].fitness() < GBestC.fitness())
+	if (Iter==0 || pop[0] < GBestC)
 		GBestC = pop[0];
 	Iter++;
 }
@@ -79,14 +71,9 @@ void ProbVector::GenerateSamplesHUX() {
 
 	int s = POP_SIZE/2, p, iA, iB;
 	if (s%2!=0) s++;
-	for (p=0 ; p<s ; p++) {
-		vector<int> currV;
-		for (int i=0 ; i<TR.N ; i++) {
-			if (drand()<Vp[i])
-				currV.push_back(i);
-		}
-		pop[p] = Chromosome(currV);
-	}
+	for (p=0 ; p<s ; p++)
+		pop[p] = Chromosome(Vp);
+
 	for (; p<POP_SIZE ; p+=2) {
 		iA = rand() % s;
 		iB = rand() % s;
@@ -98,22 +85,19 @@ void ProbVector::GenerateSamplesHUX() {
 	sortPopulation(pop);
 
 	// Update Global Best
-	if (Iter==0 || pop[0].fitness() < GBestC.fitness())
+	if (Iter==0 || pop[0] < GBestC)
 		GBestC = pop[0];
 	Iter++;
 }
 
 void ProbVector::UpdateVp() {
 
-	Chromosome
-		*LBestC = &pop[0],
-		*LWorstC = &pop[POP_SIZE-1];
-	(*LBestC).iterator();
-	(*LWorstC).iterator();
+	pop[0].iterator();
+	pop[POP_SIZE-1].iterator();
 	bool bi,wi;
 	for (int i=0 ; i<TR.N ; i++) {
-		bi = (*LBestC).next();
-		wi = (*LWorstC).next();
+		bi = pop[0].next();
+		wi = pop[POP_SIZE-1].next();
 		Vp[i] = Vp[i]*(1.0-LR) + b2i(bi)*LR;
 		if (bi!=wi)
 			Vp[i] = Vp[i]*(1.0-NLR) + b2i(bi)*NLR;

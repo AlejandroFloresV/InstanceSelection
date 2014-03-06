@@ -19,16 +19,14 @@ double dist(double *a, double *b) {
 }
 
 class OneNN {
-	bool all;
 	vector<int> subSet;
 	bool classify(int,bool);
 	double error(bool);
 
 	public:
-	OneNN() { all = true; };
+	OneNN() {};
 	void CalcDist();
-	void useAll();
-	void useJust(vector<int>);
+	void useJust(Chromosome);
 	double distBetween(int,int,bool);
 	bool classifyTR(int);
 	bool classifyTS(int);
@@ -51,37 +49,21 @@ void OneNN::CalcDist () {
 	}
 }
 
-void OneNN::useAll () {
-	all = true;
-}
-
-void OneNN::useJust (vector<int> ss) {
-	subSet = ss;
-	all = false;
+void OneNN::useJust (Chromosome _sol) {
+	subSet = _sol.get();
 }
 
 bool OneNN::classify (int ind, bool tr) {
 	double d = (double)(NumClass + 3), nd;
 	char clss = 0;
-	if (all) {
-		for (int i=0 ; i<TR.N ; i++) {
-			if (ind != i) {
-				nd = distBetween(i,ind,tr);
-				if (nd < d) {
-					d = nd;
-					clss = TR.Class[i];
-				}
-			}
-		}
-	} else {
-		int tam = subSet.size();
-		for (int i=0 ; i<tam ; i++) {
-			if (ind != subSet[i]) {
-				nd = distBetween(subSet[i],ind,tr);
-				if (nd < d) {
-					d = nd;
-					clss = TR.Class[subSet[i]];
-				}
+	for (int i=0 ; i<subSet.size() ; i++) {
+		if (ind==subSet[i])
+			return true;
+		else {
+			nd = distBetween(subSet[i],ind,tr);
+			if (nd < d) {
+				d = nd;
+				clss = TR.Class[subSet[i]];
 			}
 		}
 	}
@@ -142,4 +124,17 @@ vector<double> OneNN::EnemyDistance() {
 	for (int i=0 ; i<TR.N ; i++)
 		CE[i] = (CE[i]-minD)/(maxD-minD);
 	return CE;
+}
+
+
+/* +-------------------------------+ */
+/* | Chromosome Fitness Definition | */
+/* +-------------------------------+ */
+
+double Chromosome::fitness() const {
+	if (fit < 0.0) {
+		NN.useJust(*this);
+		fit = NN.fitnessAR();
+	}
+	return fit;
 }
