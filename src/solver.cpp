@@ -30,7 +30,7 @@ void parseArgs(int argc, char* argv[]) {
 	eP += "  -alg   Algorithm to run. Options:\n";
 	eP += "         GGA, SGA, CHC, PBIL and PSO.\n";
 	eP += "  -f     File from where the data will be loaded.\n";
-	eP += "  -10fcv Index for 10-fcv [0,9]. If not indicated, it uses\n"
+	eP += "  -10fcv Index for 10-fcv [0,9]. If not indicated, it uses\n";
 	eP += "         the entire dataset for training.\n";
 	eP += "  -iter  Maximum number of iterations (default 10000).\n";
 	eP += "  -seed  An unsigned integer value to be used as seed by the\n";
