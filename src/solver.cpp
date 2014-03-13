@@ -17,7 +17,7 @@
 using namespace std;
 
 string algorithm, filepath;
-int tenfcv = 0;
+int tenfcv = -1;
 
 #define ifi(str,var) if (cmd==str) { i++; if (i==argc) FatalError(eP); var=atoi(argv[i]); }
 #define iff(str,var) if (cmd==str) { i++; if (i==argc) FatalError(eP); var=atof(argv[i]); }
@@ -30,7 +30,8 @@ void parseArgs(int argc, char* argv[]) {
 	eP += "  -alg   Algorithm to run. Options:\n";
 	eP += "         GGA, SGA, CHC, PBIL and PSO.\n";
 	eP += "  -f     File from where the data will be loaded.\n";
-	eP += "  -10fcv Index for 10-fcv [0,9] (default 0).\n";
+	eP += "  -10fcv Index for 10-fcv [0,9]. If not indicated, it uses\n"
+	eP += "         the entire dataset for training.\n";
 	eP += "  -iter  Maximum number of iterations (default 10000).\n";
 	eP += "  -seed  An unsigned integer value to be used as seed by the\n";
 	eP += "         pseudo-random number generator (default time(NULL)).\n";
@@ -80,7 +81,7 @@ int main(int argc, char* argv[]) {
 	srand(RUN_SEED);
 	if (verbose) printf("Seed:%d\n",RUN_SEED);
 
-	if (tenfcv<0 || 9<tenfcv)
+	if (tenfcv<-1 || 9<tenfcv)
 		FatalError("The index for 10-fcv must be in the range [0,9].");
 
 	clock_t start = clock(), end;
@@ -104,7 +105,8 @@ int main(int argc, char* argv[]) {
 		printf("------------------------\n");
 		printf("Reduction        %6.2lf%%\n", 100.0-100.0*(double)bestFound.size()/TR.N);
 		printf("Training Error   %6.2lf%%\n", 100.0*NN.errorTR());
-		printf("Test Error       %6.2lf%%\n", 100.0*NN.errorTS());
+		if (tenfcv!=-1)
+			printf("Test Error       %6.2lf%%\n", 100.0*NN.errorTS());
 		printf("Elapsed time     %6.2lfs\n", (double)(end-start)/CLOCKS_PER_SEC);
 		printf("------------------------\n");
 		bestFound.print();

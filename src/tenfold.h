@@ -31,11 +31,6 @@ class InstanceSet {
 
 void LoadData (string path, int testIndex) {
 
-	if (testIndex<0 || 9<testIndex) {
-		testIndex = 0;
-		printf("ERROR: index for out of bounds. 0 selected.");
-	}
-
 	FILE *src;
 	src = fopen(path.c_str(),"r");
 	if (src==NULL)

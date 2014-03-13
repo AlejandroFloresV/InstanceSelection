@@ -160,8 +160,10 @@ Chromosome GGA() {
 			}
 			cA.mutate();
 			newPop[j] = cA;
-			cB.mutate();
-			newPop[j+1] = cB;
+			if (j+1<POP_SIZE) {
+				cB.mutate();
+				newPop[j+1] = cB;
+			}
 		}
 		pop = newPop;
 		sortPopulation(pop);
