@@ -203,6 +203,8 @@ Chromosome SGA() {
 		pop[iA] = temp[0];
 		pop[iB] = temp[1];
 		sortPopulation(pop);
+		if (pop[0] < best)
+			best = pop[0];
 	}
 
 	return best;
