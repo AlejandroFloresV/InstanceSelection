@@ -33,7 +33,7 @@ class OneNN {
 	double errorTR();
 	double errorTS();
 	double fitnessAR();
-	vector<double> EnemyDistance();
+	vector<double> EnemyDistance(bool);
 } NN;
 
 void OneNN::CalcDist () {
@@ -102,7 +102,7 @@ double OneNN::fitnessAR () {
 	return errorTR()*0.5 + ((double)subSet.size()/TR.N)*0.5;
 }
 
-vector<double> OneNN::EnemyDistance() {
+vector<double> OneNN::EnemyDistance(bool norm=true) {
 	vector<double> CE(TR.N);
 	double minD=-1.0,maxD=-1.0,currD;
 	for (int i=0 ; i<TR.N ; i++) {
@@ -121,6 +121,7 @@ vector<double> OneNN::EnemyDistance() {
 			maxD = max(maxD,CE[i]);
 		}
 	}
+	if (norm)
 	for (int i=0 ; i<TR.N ; i++)
 		CE[i] = (CE[i]-minD)/(maxD-minD);
 	return CE;

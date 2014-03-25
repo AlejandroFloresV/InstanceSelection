@@ -45,3 +45,6 @@ double C2 = 1.0;
 
 // GENETIC
 double CROSS_PROB = 1.0;
+
+// FarEnemyVoronoi
+double EXCLUDE = 0.33333;

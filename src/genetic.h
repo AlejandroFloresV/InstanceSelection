@@ -68,6 +68,8 @@ Population initPop() {
 		p = initPopEnemyProb(true);
 	else if (INIT_TYPE == "FarthestEnemy")
 		p = initPopEnemyProb(false);
+	else if (INIT_TYPE == "FarEnemyVoronoi")
+		p = initPopFrom(FarEnemyVoronoi());
 	else FatalError("Wrong type of population initialization.");
 	return p;
 }

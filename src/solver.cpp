@@ -10,6 +10,7 @@
 #include "tenfold.h"
 #include "chromosome.h"
 #include "onenn.h"
+#include "FarEnemyVoronoi.h"
 #include "genetic.h"
 #include "pbil.h"
 #include "pso.h"
@@ -27,8 +28,8 @@ int tenfcv = -1;
 void parseArgs(int argc, char* argv[]) {
 	string eP  = "Parsing the arguments.\n";
 	eP += "Arguments must be bin/solver [-<cmd> <value>] where:\n";
-	eP += "  -alg   Algorithm to run. Options:\n";
-	eP += "         GGA, SGA, CHC, PBIL and PSO.\n";
+	eP += "  -alg   Algorithm to run. Options: GGA, SGA, CHC,\n";
+	eP += "         PSO, PBIL, PBILwithHUX and FarEnemyVoronoi.\n";
 	eP += "  -f     File from where the data will be loaded.\n";
 	eP += "  -10fcv Index for 10-fcv [0,9]. If not indicated, it uses\n";
 	eP += "         the entire dataset for training.\n";
@@ -37,7 +38,8 @@ void parseArgs(int argc, char* argv[]) {
 	eP += "         pseudo-random number generator (default time(NULL)).\n";
 	eP += "  -pop   Size of the population (default 50).\n";
 	eP += "  -init  Policy of inicialization for the population, options:\n";
-	eP += "         Random (default), ClosestEnemy, FarthestEnemy.\n";
+	eP += "         Random (default), ClosestEnemy, FarthestEnemy,\n";
+	eP += "         and FarEnemyVoronoi.\n";
 	eP += "  -mp    Mutation probability (default 0.001).\n";
 	eP += "  -ms    Mutation shift (Only PBIL) (default 0.01).\n";
 	eP += "  -lr    Learning Rate (Only PBIL) (default 0.2).\n";
@@ -45,7 +47,9 @@ void parseArgs(int argc, char* argv[]) {
 	eP += "  -pso   PSO particles (default 15).\n";
 	eP += "  -c1    Weight for local best (Only PSO) (default 3.0).\n";
 	eP += "  -c2    Weight for global best (Only PSO) (default 1.0).\n";
-	eP += "  -cross Crossover probability (default 1.0).";
+	eP += "  -cross Crossover probability (default 1.0).\n";
+	eP += "  -ex    \% of Closest Enemy instances for the FarEnemyVoronoi\n";
+	eP += "         algorithm (default 0.33333).";
 	for (int i=1 ; i<argc ; i++) {
 		if (argv[i][0]=='-') {
 			if (strlen(argv[i])<2)
@@ -67,6 +71,7 @@ void parseArgs(int argc, char* argv[]) {
 			else iff("c1",C1)
 			else iff("c2",C2)
 			else iff("cross",CROSS_PROB)
+			else iff("ex",EXCLUDE)
 			else if (cmd=="nv")
 				verbose = false;
 			else FatalError(eP);
@@ -96,6 +101,7 @@ int main(int argc, char* argv[]) {
 	else tryAlg("GGA",GGA)
 	else tryAlg("SGA",SGA)
 	else tryAlg("CHC",CHC)
+	else tryAlg("FarEnemyVoronoi",FarEnemyVoronoi)
 	else FatalError("The algorithm specified does not exists.");
 
 	end = clock();
