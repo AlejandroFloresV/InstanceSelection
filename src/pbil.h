@@ -30,10 +30,13 @@ class ProbVector {
 			this->EnemyProb(true);
 		else if (INIT_TYPE == "FarthestEnemy")
 			this->EnemyProb(false);
+		else if (INIT_TYPE == "FarEnemyVoronoi")
+			this->ProbFarEnemyVoronoi();
 		else FatalError("Wrong type of population initialization.");
 	}
 
 	void EnemyProb(bool);
+	void ProbFarEnemyVoronoi();
 	void GenerateSamples();
 	void GenerateSamplesHUX();
 	void UpdateVp();
@@ -53,6 +56,16 @@ void ProbVector::EnemyProb(bool closest) {
 	for (int i=(closest ? 0 : TR.N-1), j=TR.N/35 ;
 		i>=0 && j>=0 ; (closest ? i++ : i--), j--)
 		Vp[cp[i].second] = 0.9;
+}
+
+void ProbVector::ProbFarEnemyVoronoi() {
+
+	Vp = vector<double>(TR.N,0.02);
+	Chromosome initSol = FarEnemyVoronoi();
+	initSol.iterator();
+	for (int i=0 ; i<TR.N ; i++)
+		if (initSol.next())
+			Vp[i] = 0.9;
 }
 
 void ProbVector::GenerateSamples() {
