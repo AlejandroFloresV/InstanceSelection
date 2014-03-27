@@ -18,7 +18,6 @@ class Particle {
 	
 	vector<double> V,X;
 	Chromosome *GBest,LBest;
-	double c1,c2;
 	int Iter;
 
 	public:
