@@ -28,28 +28,31 @@ int tenfcv = -1;
 void parseArgs(int argc, char* argv[]) {
 	string eP  = "Parsing the arguments.\n";
 	eP += "Arguments must be bin/solver [-<cmd> <value>] where:\n";
-	eP += "  -alg   Algorithm to run. Options: GGA, SGA, CHC,\n";
-	eP += "         PSO, PBIL, PBILwithHUX and FarEnemyVoronoi.\n";
-	eP += "  -f     File from where the data will be loaded.\n";
-	eP += "  -10fcv Index for 10-fcv [0,9]. If not indicated, it uses\n";
-	eP += "         the entire dataset for training.\n";
-	eP += "  -iter  Maximum number of iterations (default 10000).\n";
-	eP += "  -seed  An unsigned integer value to be used as seed by the\n";
-	eP += "         pseudo-random number generator (default time(NULL)).\n";
-	eP += "  -pop   Size of the population (default 50).\n";
-	eP += "  -init  Policy of inicialization for the population, options:\n";
-	eP += "         Random (default), ClosestEnemy, FarthestEnemy,\n";
-	eP += "         and FarEnemyVoronoi.\n";
-	eP += "  -mp    Mutation probability (default 0.001).\n";
-	eP += "  -ms    Mutation shift (Only PBIL) (default 0.01).\n";
-	eP += "  -lr    Learning Rate (Only PBIL) (default 0.2).\n";
-	eP += "  -nlr   Negative Learning Rate (Only PBIL) (default 0.075).\n";
-	eP += "  -pso   PSO particles (default 15).\n";
-	eP += "  -c1    Weight for local best (Only PSO) (default 3.0).\n";
-	eP += "  -c2    Weight for global best (Only PSO) (default 1.0).\n";
-	eP += "  -cross Crossover probability (default 1.0).\n";
-	eP += "  -ex    \% of Closest Enemy instances for the FarEnemyVoronoi\n";
-	eP += "         algorithm (default 0.33333).";
+	eP += "  -alg    Algorithm to run. Options: GGA, SGA, CHC,\n";
+	eP += "          PSO, PBIL, PBILwithHUX and FarEnemyVoronoi.\n";
+	eP += "  -f      File from where the data will be loaded.\n";
+	eP += "  -10fcv  Index for 10-fcv [0,9]. If not indicated, it uses\n";
+	eP += "          the entire dataset for training.\n";
+	eP += "  -iter   Maximum number of iterations (default 10000).\n";
+	eP += "  -seed   An unsigned integer value to be used as seed by the\n";
+	eP += "          pseudo-random number generator (default time(NULL)).\n";
+	eP += "  -pop    Size of the population (default 50).\n";
+	eP += "  -init   Policy of inicialization for the population, options:\n";
+	eP += "          Random (default), ClosestEnemy, FarthestEnemy,\n";
+	eP += "          and FarEnemyVoronoi.\n";
+	eP += "  -mp     Mutation probability (default 0.001).\n";
+	eP += "  -ms     Mutation shift (Only PBIL) (default 0.01).\n";
+	eP += "  -lr     Learning Rate (Only PBIL) (default 0.2).\n";
+	eP += "  -nlr    Negative Learning Rate (Only PBIL) (default 0.075).\n";
+	eP += "  -pso    PSO particles (default 15).\n";
+	eP += "  -Vmax   Maximum value for PSO velocity (Only PSO) (default 0.05).\n";
+	eP += "  -c1     Weight for local best  (Only PSO) (default 0.2).\n";
+	eP += "  -c2     Weight for global best (Only PSO) (default 0.2).\n";
+	eP += "  -Wstart Initial inertia weight (Only PSO) (default 0.5).\n";
+	eP += "  -Wend   Final inertia weight   (Only PSO) (default 0.15).\n";
+	eP += "  -cross  Crossover probability (default 1.0).\n";
+	eP += "  -ex     \% of Closest Enemy instances for the FarEnemyVoronoi\n";
+	eP += "          algorithm (default 0.33333).";
 	for (int i=1 ; i<argc ; i++) {
 		if (argv[i][0]=='-') {
 			if (strlen(argv[i])<2)
@@ -68,8 +71,11 @@ void parseArgs(int argc, char* argv[]) {
 			else iff("lr",LR)
 			else iff("nlr",NLR)
 			else ifi("pso",PARTICLES)
+			else iff("vmax",Vmax)
 			else iff("c1",C1)
 			else iff("c2",C2)
+			else iff("wstart",Wstart)
+			else iff("wend",Wend)
 			else iff("cross",CROSS_PROB)
 			else iff("ex",EXCLUDE)
 			else if (cmd=="nv")

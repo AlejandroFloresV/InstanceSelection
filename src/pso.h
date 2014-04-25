@@ -31,7 +31,7 @@ class Particle {
 			if (ind == pso_partition[i])
 				X[i] = 0.4 + drand()*0.1;
 			else X[i] = 0.05 + drand()*0.05;
-			V[i] = drand()*0.06-0.03;
+			V[i] = drand()*2*Vmax - Vmax;
 		}
 	}
 
@@ -43,7 +43,7 @@ void Particle::GenerateSamples() {
 
 	Chromosome bc, cc;
 	for (int p=0 ; p<POP_SIZE ; p++) {
-		cc = Chromosome(V);
+		cc = Chromosome(X);
 		if (p==0 || cc < bc)
 			bc = cc;
 	}
@@ -51,7 +51,7 @@ void Particle::GenerateSamples() {
 	// Update Global Best
 	if (Iter==0 || bc < LBest) {
 		LBest = bc;
-		if (Iter==0 || bc < *GBest)
+		if (bc < *GBest)
 			*GBest = bc;
 	}
 	Iter++;
@@ -65,7 +65,7 @@ void Particle::UpdateParticle(double w) {
 		li = LBest.next();
 		gi = GBest->next();
 		V[i] = w*V[i] + C1*drand()*(b2d(li)-X[i]) + C2*drand()*(b2d(gi)-X[i]);
-		V[i] = max(-0.1,min(0.1,V[i]));
+		V[i] = max(-Vmax,min(Vmax,V[i]));
 		X[i] = max(0.0,min(1.0,X[i]+V[i]));
 	}
 }
@@ -75,7 +75,7 @@ void Particle::UpdateParticle(double w) {
 // +---------------+
 
 Chromosome PSO() {
-	Chromosome bestC;
+	Chromosome bestC((int)(0.05*TR.N));
 	double w;
 	
 	pso_partition.clear();
@@ -90,7 +90,7 @@ Chromosome PSO() {
 		for (int j=0 ; j<PARTICLES ; j++) {
 			p[j].GenerateSamples();
 			p[j].UpdateParticle(w);
-			w = 1.5*((double)(MAX_ITER-i-1))/((double)MAX_ITER+1.0);
+			w = (Wstart - Wend)*((double)(MAX_ITER-i-1))/((double)MAX_ITER + Wend);
 		}
 	}
 	return bestC;
