@@ -99,7 +99,7 @@ double OneNN::errorTS () {
 }
 
 double OneNN::fitnessAR () {
-	return errorTR()*0.5 + ((double)subSet.size()/TR.N)*0.5;
+	return errorTR()*ALPHA + ((double)subSet.size()/TR.N)*(1.0-ALPHA);
 }
 
 vector<double> OneNN::EnemyDistance(bool norm=true) {

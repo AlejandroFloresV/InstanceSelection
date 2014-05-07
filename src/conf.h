@@ -28,6 +28,7 @@ bool verbose = true;
 unsigned int RUN_SEED;
 
 // GENERAL
+double ALPHA = 0.5;
 int MAX_ITER = 10000;
 int POP_SIZE = 50;
 double MUT_PROB = 0.001;

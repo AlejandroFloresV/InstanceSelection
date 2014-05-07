@@ -37,6 +37,8 @@ void parseArgs(int argc, char* argv[]) {
 	eP += "  -seed   An unsigned integer value to be used as seed by the\n";
 	eP += "          pseudo-random number generator (default time(NULL)).\n";
 	eP += "  -pop    Size of the population (default 50).\n";
+	eP += "  -alpha  Importance of error over reducion for the calculation";
+	eP += "          of the fitness function (default 0.5).\n";
 	eP += "  -init   Policy of inicialization for the population, options:\n";
 	eP += "          Random (default), ClosestEnemy, FarthestEnemy,\n";
 	eP += "          and FarEnemyVoronoi.\n";
@@ -65,6 +67,7 @@ void parseArgs(int argc, char* argv[]) {
 			else ifi("iter",MAX_ITER)
 			else ifi("seed",RUN_SEED)
 			else ifi("pop",POP_SIZE)
+			else iff("alpha",ALPHA)
 			else ifs("init",INIT_TYPE)
 			else iff("mp",MUT_PROB)
 			else iff("ms",MS)
