@@ -7,13 +7,12 @@ endOut="output.txt"
 
 echo "bin/solver $@" > $endOut
 
-for i in {0..9}
+for j in {1..3}
 do
-	for j in {1..5}
+	for i in {0..9}
 	do
 		echo -en "\rSet #$((i+1)) - Run #$j"
 		bin/solver $@ -10fcv $i -nv >> $endOut
-		sleep 2
 	done
 done
 
