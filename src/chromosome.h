@@ -18,6 +18,7 @@ class Chromosome {
 	Chromosome(int);
 	Chromosome(vector<int>);
 	Chromosome(vector<double>);
+	void calc_fitness();
 	double fitness() const;
 	void iterator();
 	bool next();
@@ -97,4 +98,9 @@ void Chromosome::print() {
 	for (int i=0 ; i<on ; i++)
 		printf("%d ",TR.Index[gene[i]]);
 	printf("\n");
+}
+
+
+void calc_fit_chromosome(Chromosome &c) {
+	c.calc_fitness();
 }

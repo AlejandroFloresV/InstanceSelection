@@ -139,3 +139,9 @@ double Chromosome::fitness() const {
 	}
 	return fit;
 }
+
+void Chromosome::calc_fitness() {
+	OneNN mynn;
+	mynn.useJust(*this);
+	fit = mynn.fitnessAR();
+}

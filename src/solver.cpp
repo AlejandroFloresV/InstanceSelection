@@ -1,11 +1,12 @@
-#include<iostream>
-#include<cstdio>
-#include<cstdlib>
-#include<climits>
-#include<cstring>
-#include<algorithm>
-#include<vector>
-#include<set>
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <climits>
+#include <cstring>
+#include <algorithm>
+#include <vector>
+#include <set>
+#include <thread>
 #include "conf.h"
 #include "tenfold.h"
 #include "chromosome.h"
