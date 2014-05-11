@@ -41,18 +41,21 @@ class Particle {
 
 void Particle::GenerateSamples() {
 
-	Chromosome bc, cc;
+	Population pop(POP_SIZE);
+	vector<thread> t;
 	for (int p=0 ; p<POP_SIZE ; p++) {
-		cc = Chromosome(X);
-		if (p==0 || cc < bc)
-			bc = cc;
+		pop[p] = Chromosome(X);
+		t.push_back(thread(calc_fit_chromosome,ref(pop[p])));
 	}
+	for (int i=0 ; i<t.size() ; i++)
+		t[i].join();
+	sortPopulation(pop);
 
 	// Update Global Best
-	if (Iter==0 || bc < LBest) {
-		LBest = bc;
-		if (bc < *GBest)
-			*GBest = bc;
+	if (Iter==0 || pop[0] < LBest) {
+		LBest = pop[0];
+		if (LBest < *GBest)
+			*GBest = LBest;
 	}
 	Iter++;
 }
@@ -89,8 +92,8 @@ Chromosome PSO() {
 	for (int i=0 ; i<MAX_ITER ; i++) {
 		for (int j=0 ; j<PARTICLES ; j++) {
 			p[j].GenerateSamples();
-			p[j].UpdateParticle(w);
 			w = (Wstart - Wend)*((double)(MAX_ITER-i-1))/((double)MAX_ITER + Wend);
+			p[j].UpdateParticle(w);
 		}
 	}
 	return bestC;
