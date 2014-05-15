@@ -3,7 +3,7 @@ all: solver norm average
 solver:
 	mkdir -p bin
 	rm -f bin/solver
-	c++ -std=c++11 -o3 src/solver.cpp -o bin/solver
+	c++ -o3 src/solver.cpp -o bin/solver -pthread -std=c++11
 
 norm:
 	mkdir -p bin
