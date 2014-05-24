@@ -3,7 +3,8 @@
 echo "Full Factorial Experiment"
 echo "Running..."
 
-endOut="output.txt"
+endOut=$1
+shift
 
 echo "bin/solver $@" > $endOut
 
