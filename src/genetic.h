@@ -9,20 +9,12 @@
 using namespace std;
 
 #define TOURNAMENT_K 3
-#define Population vector<Chromosome>
 #define Offspring pair<Chromosome,Chromosome>
 #define sortPopulation(p) sort(p.begin(),p.end())
 
 // +----------------+
 // | Some Functions |
 // +----------------+
-
-Population initPopRandom() {
-	Population pop(POP_SIZE);
-	for (int i=0 ; i<POP_SIZE ; i++)
-		pop[i] = Chromosome((int)round(TR.N*(0.04+0.02*drand())));
-	return pop;
-}
 
 Population initPopFrom(Chromosome from) {
 	Population pop(POP_SIZE);
@@ -38,40 +30,6 @@ Population initPopFrom(Chromosome from) {
 		pop[i] = Chromosome(v);
 	}
 	return pop;
-}
-
-Population initPopEnemyProb(bool closest) {
-
-	vector<double> Vp = NN.EnemyDistance();
-	vector<pair<double,int> > cp(TR.N);
-
-	for (int i=0 ; i<TR.N ; i++)
-		cp[i] = make_pair(Vp[i],i);
-	sort(cp.begin(),cp.end());
-	Vp = vector<double>(TR.N,0.02);
-
-	for (int i=(closest ? 0 : TR.N-1), j=TR.N/35 ;
-		i>=0 && j>=0 ; (closest ? i++ : i--), j--)
-		Vp[cp[i].second] = 0.9;
-
-	Population pop(POP_SIZE);
-	for (int i=0 ; i<POP_SIZE ; i++)
-		pop[i] = Chromosome(Vp);
-	return pop;
-}
-
-Population initPop() {
-	Population p;
-	if (INIT_TYPE == "Random")
-		p = initPopRandom();
-	else if (INIT_TYPE == "ClosestEnemy")
-		p = initPopEnemyProb(true);
-	else if (INIT_TYPE == "FarthestEnemy")
-		p = initPopEnemyProb(false);
-	else if (INIT_TYPE == "FarEnemyVoronoi")
-		p = initPopFrom(FarEnemyVoronoi());
-	else FatalError("Wrong type of population initialization.");
-	return p;
 }
 
 int Hamming(Chromosome a, Chromosome b) {
@@ -145,7 +103,7 @@ Offspring CrossoverHUX(Chromosome a, Chromosome b) {
 Chromosome GGA() {
 
 	Chromosome best, cA, cB;
-	Population pop = initPop(),
+	Population pop = initPopulation(),
 		newPop(POP_SIZE);
 	
 	sortPopulation(pop);
@@ -185,7 +143,7 @@ Chromosome GGA() {
 Chromosome SGA() {
 
 	Chromosome best, cA, cB;
-	Population pop = initPop(),
+	Population pop = initPopulation(),
 		temp = Population(4);
 	int iA, iB;
 	
@@ -221,11 +179,9 @@ Chromosome SGA() {
 Chromosome CHC() {
 
 	Chromosome best;
-	Population pop = initPop();
+	Population pop = initPopulation();
 	int threshold = TR.N/4,
 		iA, iB;
-
-	for (int p=0 ; p<POP_SIZE ; p++)
 		
 	sortPopulation(pop);
 	best = pop[0];

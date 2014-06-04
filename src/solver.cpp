@@ -12,6 +12,7 @@
 #include "chromosome.h"
 #include "onenn.h"
 #include "FarEnemyVoronoi.h"
+#include "init.h"
 #include "genetic.h"
 #include "pbil.h"
 #include "pso.h"
@@ -38,8 +39,9 @@ void parseArgs(int argc, char* argv[]) {
 	eP += "  -seed   An unsigned integer value to be used as seed by the\n";
 	eP += "          pseudo-random number generator (default time(NULL)).\n";
 	eP += "  -pop    Size of the population (default 50).\n";
-	eP += "  -alpha  Importance of error over reducion for the calculation";
+	eP += "  -alpha  Importance of error over reducion for the calculation\n";
 	eP += "          of the fitness function (default 0.5).\n";
+	eP += "  -bit    Probability of appearance for each bit (default 0.05).\n";
 	eP += "  -init   Policy of inicialization for the population, options:\n";
 	eP += "          Random (default), ClosestEnemy, FarthestEnemy,\n";
 	eP += "          and FarEnemyVoronoi.\n";
@@ -70,6 +72,7 @@ void parseArgs(int argc, char* argv[]) {
 			else ifi("pop",POP_SIZE)
 			else iff("alpha",ALPHA)
 			else ifs("init",INIT_TYPE)
+			else iff("bit",BIT_PROB)
 			else iff("mp",MUT_PROB)
 			else iff("ms",MS)
 			else iff("lr",LR)

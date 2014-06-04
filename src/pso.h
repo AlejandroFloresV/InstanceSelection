@@ -25,12 +25,14 @@ class Particle {
 	Particle(Chromosome *gbc, int ind) {
 		GBest = gbc;
 		Iter = 0;
-		X = vector<double>(TR.N);
+		int bitsOn = TR.N / PARTICLES;
+		double hi_prob = min(0.9, BIT_PROB * TR.N * 0.7 / ((double)bitsOn));
+		double low_prob = (BIT_PROB * TR.N - bitsOn * hi_prob)/((double)(TR.N - bitsOn));
+		X = vector<double>(TR.N,low_prob);
 		V = vector<double>(TR.N);
 		for (int i=0 ; i<TR.N ; i++) {
 			if (ind == pso_partition[i])
-				X[i] = 0.4 + drand()*0.1;
-			else X[i] = 0.05 + drand()*0.05;
+				X[i] = hi_prob;
 			V[i] = drand()*2*Vmax - Vmax;
 		}
 	}
@@ -78,7 +80,7 @@ void Particle::UpdateParticle(double w) {
 // +---------------+
 
 Chromosome PSO() {
-	Chromosome bestC((int)(0.05*TR.N));
+	Chromosome bestC((int)(BIT_PROB*TR.N));
 	double w;
 	
 	pso_partition.clear();

@@ -33,6 +33,7 @@ int MAX_ITER = 10000;
 int POP_SIZE = 50;
 double MUT_PROB = 0.001;
 string INIT_TYPE = "Random";
+double BIT_PROB = 0.05;
 
 // PBIL
 double MS = 0.01;
