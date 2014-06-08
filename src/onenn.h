@@ -11,23 +11,22 @@ using namespace std;
 
 double** DistTable;
 
-double dist(double *a, double *b) {
-	double d = 0.0;
-	for (int i=0 ; i<NumClass ; i++)
-		d += (a[i]-b[i])*(a[i]-b[i]);
-	return sqrt(d);
-}
-
 class OneNN {
-	vector<int> subSet;
+	ANNpointArray set;
+	vector<int> index;
+	ANNkd_tree* kdTree;
+	ANNidxArray nnIdx;
+	ANNdistArray dists;
 	bool classify(int,bool);
 	double error(bool);
 
 	public:
-	OneNN() {};
+	OneNN() {
+		nnIdx = new ANNidx[1];
+		dists = new ANNdist[1];
+	}
 	void CalcDist();
 	void useJust(Chromosome);
-	double distBetween(int,int,bool);
 	bool classifyTR(int);
 	bool classifyTS(int);
 	double errorTR();
@@ -37,45 +36,31 @@ class OneNN {
 } NN;
 
 void OneNN::CalcDist () {
-
 	DistTable = new double*[TR.N];
 	for (int i=0 ; i<TR.N ; i++)
 		DistTable[i] = new double[TR.N];
-
 	for (int i=0 ; i<TR.N ; i++) {
 		DistTable[i][i] = 0.0;
 		for (int j=i+1 ; j<TR.N ; j++)
-			DistTable[i][j] = DistTable[j][i] = dist(TR[i],TR[j]);
+			DistTable[i][j] = DistTable[j][i] = sqrt(annDist(NumClass,TR[i],TR[j]));
 	}
 }
 
 void OneNN::useJust (Chromosome _sol) {
-	subSet = _sol.get();
+	index = _sol.get();
+	set = new ANNpoint[index.size()];
+	for (int i=index.size()-1 ; i>=0 ; i--)
+		set[i] = TR[index[i]];
+	kdTree = new ANNkd_tree(set,index.size(),NumClass);
 }
 
 bool OneNN::classify (int ind, bool tr) {
-	double d = (double)(NumClass + 3), nd;
-	char clss = 0;
-	for (int i=0 ; i<subSet.size() ; i++) {
-		if (ind==subSet[i])
-			return true;
-		else {
-			nd = distBetween(subSet[i],ind,tr);
-			if (nd < d) {
-				d = nd;
-				clss = TR.Class[subSet[i]];
-			}
-		}
-	}
-	return (tr ? TR : TS).Class[ind] == clss;
-}
-
-double OneNN::distBetween (int from, int to, bool tr) {
-	if (tr) return DistTable[from][to];
-	else return dist(TR[from],TS[to]);
+	kdTree->annkSearch((tr ? TR : TS)[ind],1,nnIdx,dists);
+	return (tr ? TR : TS).Class[ind] == TR.Class[index[nnIdx[0]]];
 }
 
 double OneNN::error (bool tr) {
+	if (index.size()==0) return 1.0;
 	int wrong = 0, tam = (tr ? TR.N : TS.N);
 	for (int i=0 ; i<tam ; i++)
 		if (!classify(i,tr)) wrong++;
@@ -99,7 +84,7 @@ double OneNN::errorTS () {
 }
 
 double OneNN::fitnessAR () {
-	return errorTR()*ALPHA + ((double)subSet.size()/TR.N)*(1.0-ALPHA);
+	return errorTR()*ALPHA + ((double)index.size()/TR.N)*(1.0-ALPHA);
 }
 
 vector<double> OneNN::EnemyDistance(bool norm=true) {
@@ -109,7 +94,7 @@ vector<double> OneNN::EnemyDistance(bool norm=true) {
 		CE[i] = -1.0;
 		for (int j=0 ; j<TR.N ; j++) {
 			if (TR.Class[i] != TR.Class[j]) {
-				currD = distBetween(i,j,true);
+				currD = DistTable[i][j];
 				if (CE[i]<0.0 || currD<CE[i])
 					CE[i] = currD;
 			}
@@ -141,7 +126,7 @@ double Chromosome::fitness() const {
 }
 
 void Chromosome::calc_fitness() {
-	OneNN mynn;
-	mynn.useJust(*this);
-	fit = mynn.fitnessAR();
+	OneNN* mynn = new OneNN();
+	mynn->useJust(*this);
+	fit = mynn->fitnessAR();
 }

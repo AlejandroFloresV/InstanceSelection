@@ -110,7 +110,7 @@ Chromosome GGA() {
 	best = pop[0];
 
 	for (int i=0 ; i<MAX_ITER ; i++) {
-		vector<thread> t;
+		//vector<thread> t;
 		for (int j=0 ; j<POP_SIZE ; j+=2) {
 			cA = TournamentSel(&pop);
 			cB = TournamentSel(&pop);
@@ -121,16 +121,16 @@ Chromosome GGA() {
 			}
 			cA.mutate();
 			newPop[j] = cA;
-			t.push_back(thread(calc_fit_chromosome,ref(newPop[j])));
+			//t.push_back(thread(calc_fit_chromosome,ref(newPop[j])));
 			if (j+1<POP_SIZE) {
 				cB.mutate();
 				newPop[j+1] = cB;
-				t.push_back(thread(calc_fit_chromosome,ref(newPop[j+1])));
+				//t.push_back(thread(calc_fit_chromosome,ref(newPop[j+1])));
 			}
 		}
 
-		for (int i=0 ; i<t.size() ; i++)
-			t[i].join();
+		//for (int i=0 ; i<t.size() ; i++)
+		//	t[i].join();
 		pop = newPop;
 		sortPopulation(pop);
 		if (pop[0] < best)
@@ -187,21 +187,21 @@ Chromosome CHC() {
 	best = pop[0];
 
 	for (int i=0 ; i<MAX_ITER ; i++) {
-		vector<thread> t;
+		//vector<thread> t;
 		for (int j=0 ; j<POP_SIZE ; j+=2) {
 			iA = rand() % POP_SIZE;
 			iB = rand() % POP_SIZE;
 			if (Hamming(pop[iA],pop[iB]) > threshold) {
 				Offspring crossAB = CrossoverHUX(pop[iA],pop[iB]);
 				pop.push_back(crossAB.first);
-				t.push_back(thread(calc_fit_chromosome,ref(pop[pop.size()-1])));
+				//t.push_back(thread(calc_fit_chromosome,ref(pop[pop.size()-1])));
 				pop.push_back(crossAB.second);
-				t.push_back(thread(calc_fit_chromosome,ref(pop[pop.size()-1])));
+				//t.push_back(thread(calc_fit_chromosome,ref(pop[pop.size()-1])));
 			}
 		}
 
-		for (int i=0 ; i<t.size() ; i++)
-			t[i].join();
+		//for (int i=0 ; i<t.size() ; i++)
+		//	t[i].join();
 
 		if (pop.size()==POP_SIZE) {
 			if (threshold==0) {

@@ -6,7 +6,8 @@
 #include <algorithm>
 #include <vector>
 #include <set>
-#include <thread>
+//#include <thread>
+#include <ANN/ANN.h>
 #include "conf.h"
 #include "tenfold.h"
 #include "chromosome.h"

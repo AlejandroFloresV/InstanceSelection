@@ -13,18 +13,18 @@ class InstanceSet {
 
 	public:
 	int N;
-	double* Attr;
+	ANNpointArray Point;
 	char* Class;
 	int *Index;
 
 	InstanceSet(){}
 	InstanceSet(int n, int a) : N(n) {
-		Attr = new double[n*a];
+		Point = annAllocPts(n,a);
 		Class = new char[n];
 		Index = new int[n];
 	}
-	double* operator[](const int& ind) {
-		return &(this->Attr[NumClass*ind]);
+	ANNpoint operator[](const int& ind) {
+		return Point[ind];
 	}
 
 } TR,TS;
@@ -50,7 +50,7 @@ void LoadData (string path, int testIndex) {
 	TR = InstanceSet(trInd,NumClass);
 	TS = InstanceSet(tsInd,NumClass);
 
-	double *attr;
+	ANNpoint point;
 	char *clss;
 	trInd = tsInd = 0;
 	for (int n=0 ; n<N ; n++) {
@@ -58,14 +58,14 @@ void LoadData (string path, int testIndex) {
 		if (temp == testIndex) {
 			TS.Index[tsInd] = n;
 			clss = TS.Class + tsInd;
-			attr = TS[tsInd++];
+			point = TS[tsInd++];
 		} else {
 			TR.Index[trInd] = n;
 			clss = TR.Class + trInd;
-			attr = TR[trInd++];
+			point = TR[trInd++];
 		}
 		for (int k=0 ; k<NumClass ; k++)
-			fscanf(src,"%lf",&attr[k]);
+			fscanf(src,"%lf",&point[k]);
 		fscanf(src,"%d",&temp);
 		*clss = (char)temp;
 	}

@@ -22,7 +22,7 @@ Chromosome FarEnemyVoronoi() {
 	for (int i=TR.N-1 ; i>=exclude ; i--) {
 		bool add = true;
 		for (int j=0 ; add && j<sel.size() ; j++)
-			if (NN.distBetween(cp[i].second,cp[sel[j]].second,true)
+			if (DistTable[cp[i].second][cp[sel[j]].second]
 					< cp[sel[j]].first + cp[i].first)
 				add = false;
 		if (add) sel.push_back(i);
