@@ -12,7 +12,6 @@ using namespace std;
 class OneNN {
 	kd_tree *t;
 	Chromosome &sol, _init;
-	//vector<int> subSet;
 	int wrong(bool);
 	bool classify(int,bool);
 
@@ -30,32 +29,16 @@ class OneNN {
 
 void OneNN::useJust (Chromosome &_sol) {
 	sol = _sol;
-	t = new kd_tree(sol);
-	//for (int i=0 ; i<TR.N ; i++)
-	//	if (sol[i])
-	//		subSet.push_back(i);
+	if (sol.size() > 0)
+		t = new kd_tree(sol);
 }
 
 bool OneNN::classify (int ind, bool tr) {
-	/*double d = (double)(K + 3), nd;
-	char clss = 0;
-	for (int i=0 ; i<subSet.size() ; i++) {
-		if (ind==subSet[i])
-			return true;
-		else {
-			nd = distSqrt(subSet[i],ind,tr);
-			if (nd < d) {
-				d = nd;
-				clss = TR.Class[subSet[i]];
-			}
-		}
-	}
-	return (tr ? TR : TS).Class[ind] == clss;*/
 	return (tr ? TR : TS).Class[ind] == TR.Class[t->search(ind,tr)];
 }
 
 int OneNN::wrong (bool tr) {
-	if (sol.size()==0) return 1.0;
+	if (sol.size()==0) return TR.N;
 	int wrong = 0, tam = (tr ? TR.N : TS.N);
 	for (int i=0 ; i<tam ; i++)
 		if ((tr ? !sol[i] : true) && !classify(i,tr))

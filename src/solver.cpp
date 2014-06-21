@@ -142,16 +142,5 @@ int main(int argc, char* argv[]) {
 		printf("%.2lf\n", 100.0*NN.errorTS());
 	}
 
-
-/*	Chromosome a;
-	for (int i=0 ; i<TR.N ; i++) {
-		a.set(i);
-		cout << i << ": " << TR[i][0] << " " << TR[i][1] << endl;
-	}
-	a.flip(4);
-	kd_tree t(a);
-
-	cout << t.search(4) << endl;
-*/
 	return 0;
 }
