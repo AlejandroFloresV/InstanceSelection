@@ -20,24 +20,17 @@ Population initPopFrom(Chromosome from) {
 	Population pop(POP_SIZE);
 	pop[0] = from;
 	for (int i=1 ; i<POP_SIZE ; i++) {
-		from.iterator();
-		vector<int> v;
-		for (int j=0 ; j<TR.N ; j++) {
-			bool iB = from.next();
-			if (drand() < 0.35) iB = !iB;
-			if (iB) v.push_back(i);
-		}
-		pop[i] = Chromosome(v);
+		pop[i] = from;
+		for (int j=0 ; j<TR.N ; j++)
+			if (drand() < 0.35) pop[i].flip(j);
 	}
 	return pop;
 }
 
-int Hamming(Chromosome a, Chromosome b) {
-	a.iterator();
-	b.iterator();
+int Hamming(Chromosome &a, Chromosome &b) {
 	int hd = 0;
 	for (int i=0 ; i<TR.N ; i++)
-		if (a.next()!=b.next())
+		if (a[i] != b[i])
 			hd++;
 	return hd;
 }
@@ -61,39 +54,32 @@ Chromosome TournamentSel(Population *pop) {
 // | Crossover Algorithms |
 // +----------------------+
 
-Offspring CrossoverOnePoint(Chromosome a, Chromosome b) {
+Offspring CrossoverOnePoint(Chromosome &a, Chromosome &b) {
 	int point = rand() % TR.N;
-	vector<int> vA, vB;
-	bool bA, bB;
-	a.iterator();
-	b.iterator();
+	Chromosome A, B;
 	for (int i=0 ; i<TR.N ; i++) {
-		bA = (i<point ? a.next() : b.next());
-		bB = (i<point ? b.next() : a.next());
-		if (bA) vA.push_back(i);
-		if (bB) vB.push_back(i);
+		A.set(i,i<point ? a[i] : b[i]);
+		B.set(i,i<point ? b[i] : a[i]);
 	}
-	return make_pair(Chromosome(vA),Chromosome(vB));
+	return make_pair(A,B);
 }
 
-Offspring CrossoverHUX(Chromosome a, Chromosome b) {
+Offspring CrossoverHUX(Chromosome &a, Chromosome &b) {
 	int del = Hamming(a,b)/2;
-	vector<int> vA, vB;
+	Chromosome A, B;
 	bool bA, bB;
-	a.iterator();
-	b.iterator();
 	for (int i=0 ; i<TR.N ; i++) {
-		bA = a.next();
-		bB = b.next();
+		bA = a[i];
+		bB = b[i];
 		if (del>0 && bA != bB && drand()<0.5) {
 			bA = !bA;
 			bB = !bB;
 			del--;
 		}
-		if (bA) vA.push_back(i);
-		if (bB) vB.push_back(i);
+		A.set(i,bA);
+		B.set(i,bB);
 	}
-	return make_pair(Chromosome(vA),Chromosome(vB));
+	return make_pair(A,B);
 }
 
 // +--------------------+
@@ -110,27 +96,27 @@ Chromosome GGA() {
 	best = pop[0];
 
 	for (int i=0 ; i<MAX_ITER ; i++) {
-		//vector<thread> t;
+		vector<thread> t;
 		for (int j=0 ; j<POP_SIZE ; j+=2) {
 			cA = TournamentSel(&pop);
 			cB = TournamentSel(&pop);
 			if (drand() < CROSS_PROB) {
-				Offspring crossAB = CrossoverOnePoint(cA,cB);
+				Offspring crossAB = CrossoverOnePoint(ref(cA),ref(cB));
 				cA = crossAB.first;
 				cB = crossAB.second;
 			}
 			cA.mutate();
 			newPop[j] = cA;
-			//t.push_back(thread(calc_fit_chromosome,ref(newPop[j])));
+			t.push_back(thread(calc_fit_chromosome,ref(newPop[j])));
 			if (j+1<POP_SIZE) {
 				cB.mutate();
 				newPop[j+1] = cB;
-				//t.push_back(thread(calc_fit_chromosome,ref(newPop[j+1])));
+				t.push_back(thread(calc_fit_chromosome,ref(newPop[j+1])));
 			}
 		}
 
-		//for (int i=0 ; i<t.size() ; i++)
-		//	t[i].join();
+		for (int i=0 ; i<t.size() ; i++)
+			t[i].join();
 		pop = newPop;
 		sortPopulation(pop);
 		if (pop[0] < best)
@@ -156,7 +142,7 @@ Chromosome SGA() {
 		temp[0] = pop[iA];
 		temp[1] = pop[iB];
 		if (drand() < CROSS_PROB) {
-			Offspring crossAB = CrossoverOnePoint(temp[0],temp[1]);
+			Offspring crossAB = CrossoverOnePoint(ref(temp[0]),ref(temp[1]));
 			temp[2] = crossAB.first;
 			temp[3] = crossAB.second;
 		} else {
@@ -182,26 +168,26 @@ Chromosome CHC() {
 	Population pop = initPopulation();
 	int threshold = TR.N/4,
 		iA, iB;
-		
+
 	sortPopulation(pop);
 	best = pop[0];
 
 	for (int i=0 ; i<MAX_ITER ; i++) {
-		//vector<thread> t;
+		vector<thread> t;
 		for (int j=0 ; j<POP_SIZE ; j+=2) {
 			iA = rand() % POP_SIZE;
 			iB = rand() % POP_SIZE;
-			if (Hamming(pop[iA],pop[iB]) > threshold) {
-				Offspring crossAB = CrossoverHUX(pop[iA],pop[iB]);
+			if (Hamming(ref(pop[iA]),ref(pop[iB])) > threshold) {
+				Offspring crossAB = CrossoverHUX(ref(pop[iA]),ref(pop[iB]));
 				pop.push_back(crossAB.first);
-				//t.push_back(thread(calc_fit_chromosome,ref(pop[pop.size()-1])));
+				t.push_back(thread(calc_fit_chromosome,ref(pop[pop.size()-1])));
 				pop.push_back(crossAB.second);
-				//t.push_back(thread(calc_fit_chromosome,ref(pop[pop.size()-1])));
+				t.push_back(thread(calc_fit_chromosome,ref(pop[pop.size()-1])));
 			}
 		}
 
-		//for (int i=0 ; i<t.size() ; i++)
-		//	t[i].join();
+		for (int i=0 ; i<t.size() ; i++)
+			t[i].join();
 
 		if (pop.size()==POP_SIZE) {
 			if (threshold==0) {

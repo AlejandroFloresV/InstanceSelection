@@ -8,34 +8,27 @@
 
 using namespace std;
 
+#define tryInit(str,fun) if (INIT_TYPE==str) s = fun();
 #define Population vector<Chromosome>
 
 Chromosome initSolEnemy(bool closest) {
-
-	vector<double> ed = NN.EnemyDistance();
-	vector<pair<double,int> > cp(TR.N);
-
-	for (int i=0 ; i<TR.N ; i++)
-		cp[i] = make_pair(ed[i],i);
-	sort(cp.begin(),cp.end());
-
-	vector<int> v;
+	vector<pair<double,int> > cp = SortedEnemyDistance();
+	Chromosome sol;
 	for (int i=(closest ? 0 : TR.N-1), j=TR.N*BIT_PROB
 		; j>=0 ; (closest ? i++ : i--), j--)
-		v.push_back(cp[i].second);
-	sort(v.begin(),v.end());
-
-	return Chromosome(v);
+		sol.set(cp[i].second);
+	return sol;
 }
+
+#define ClosestEnemy() initSolEnemy(true)
+#define FarthestEnemy() initSolEnemy(false)
 
 Chromosome initSolution() {
 	Chromosome s;
-	if (INIT_TYPE == "ClosestEnemy")
-		s = initSolEnemy(true);
-	else if (INIT_TYPE == "FarthestEnemy")
-		s = initSolEnemy(false);
-	else if (INIT_TYPE == "FarEnemyVoronoi")
-		s = FarEnemyVoronoi();
+	tryInit("ClosestEnemy",ClosestEnemy)
+	else tryInit("FarthestEnemy",FarthestEnemy)
+	else tryInit("FarEnemyVoronoi",FarEnemyVoronoi)
+	else tryInit("CNN",CNN)
 	else FatalError("Wrong type of population initialization.");
 	return s;
 }
@@ -49,9 +42,8 @@ vector<double> initProbVector() {
 	double hi_prob = min(0.9,BIT_PROB * TR.N * 0.7 / ((double)bitsOn));
 	double low_prob = (BIT_PROB * TR.N - bitsOn * hi_prob)/((double)(TR.N - bitsOn));
 	vector<double> vp(TR.N,low_prob);
-	init.iterator();
 	for (int i=0 ; i<TR.N ; i++)
-		if (init.next())
+		if (init[i])
 			vp[i] = hi_prob;
 	return vp;
 }

@@ -9,97 +9,83 @@
 using namespace std;
 
 class Chromosome {
-	int on, it, valIt;
+	int on;
 	mutable double fit;
-	vector<int> gene;
+	vector<bool> gene;
 
 	public:
 	Chromosome();
 	Chromosome(int);
-	Chromosome(vector<int>);
-	Chromosome(vector<double>);
-	void calc_fitness();
+	Chromosome(vector<double>&);
 	double fitness() const;
-	void iterator();
-	bool next();
+	void calc_fitness();
 	void mutate();
 	void print();
 	int size() { return on; }
-	vector<int> get() { return gene; }
 	bool operator<(const Chromosome& val) const {
 		return fitness() < val.fitness();
+	}
+	bool operator[](const int& ind) {
+		return gene[ind];
+	}
+	void set(int i, bool v=true) {
+		if (!gene[i] && v) on++;
+		else if (gene[i] && !v) on--;
+		gene[i] = v;
+	}
+	void flip(int i) {
+		gene[i] = !gene[i];
+		if (gene[i]) on++;
+		else on--;
 	}
 };
 
 Chromosome::Chromosome() {
 	fit = -1.0;
-	on = it = valIt = 0;
+	on = 0;
+	gene = vector<bool>(TR.N,false);
 }
 
 Chromosome::Chromosome(int _on) {
 	on = _on;
 	fit = -1.0;
-	it = valIt = 0;
-	set<int> m;
+	std::set<int> m;
 	while (m.size()<_on)
 		m.insert(rand() % TR.N);
-	gene = vector<int>(m.begin(),m.end());
+	gene = vector<bool>(TR.N,false);
+	for (std::set<int>::iterator its=m.begin(); its!=m.end(); ++its)
+		gene[*its] = true;
 }
 
-Chromosome::Chromosome(vector<int> _gene) {
+Chromosome::Chromosome(vector<double> &vp) {
+	on = 0;
 	fit = -1.0;
-	it = valIt = 0;
-	on = _gene.size();
-	gene = _gene;
-}
-
-Chromosome::Chromosome(vector<double> vp) {
-	fit = -1.0;
-	it = on = 0;
+	gene = vector<bool>(TR.N,false);
 	for (int i=0 ; i<TR.N ; i++)
-		if (drand() < vp[i]) {
-			gene.push_back(i);
-			on++;
-		}
-}
-
-void Chromosome::iterator() {
-	it = valIt = 0;
-}
-
-bool Chromosome::next() {
-	if (on <= it)
-		return false;
-	if (valIt++ == gene[it]) {
-		it++;
-		return true;
+	if (drand() < vp[i]) {
+		gene[i] = true;
+		on++;
 	}
-	return false;
 }
 
 void Chromosome::mutate() {
-	iterator();
-	vector<int> newGene;
-	bool isOn;
 	for (int i=0 ; i<TR.N ; i++) {
-		isOn = next();
-		if (drand() < MUT_PROB)
-			isOn = !isOn;
-		if (isOn)
-			newGene.push_back(i);
+		if (drand() < MUT_PROB) {
+			gene[i] = !gene[i];
+			if (gene[i]) on++;
+			else on--;
+		}
 	}
-	gene = newGene;
-	on = newGene.size();
 	fit = -1.0;
 }
 
 void Chromosome::print() {
 	printf("On(%d) : ",on);
-	for (int i=0 ; i<on ; i++)
-		printf("%d ",TR.Index[gene[i]]);
+	for (int i=0 ; i<TR.N ; i++)
+		if (gene[i])
+			printf("%d ",TR.Index[i]);
 	printf("\n");
 }
-
 
 void calc_fit_chromosome(Chromosome &c) {
 	c.calc_fitness();

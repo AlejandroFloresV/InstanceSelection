@@ -44,13 +44,13 @@ class Particle {
 void Particle::GenerateSamples() {
 
 	Population pop(POP_SIZE);
-	//vector<thread> t;
+	vector<thread> t;
 	for (int p=0 ; p<POP_SIZE ; p++) {
-		pop[p] = Chromosome(X);
-		//t.push_back(thread(calc_fit_chromosome,ref(pop[p])));
+		pop[p] = Chromosome(ref(X));
+		t.push_back(thread(calc_fit_chromosome,ref(pop[p])));
 	}
-	//for (int i=0 ; i<t.size() ; i++)
-	//	t[i].join();
+	for (int i=0 ; i<t.size() ; i++)
+		t[i].join();
 	sortPopulation(pop);
 
 	// Update Global Best
@@ -63,12 +63,10 @@ void Particle::GenerateSamples() {
 }
 
 void Particle::UpdateParticle(double w) {
-	LBest.iterator();
-	GBest->iterator();
 	bool li,gi;
 	for (int i=0 ; i<TR.N ; i++) {
-		li = LBest.next();
-		gi = GBest->next();
+		li = LBest[i];
+		gi = (&GBest)[i];
 		V[i] = w*V[i] + C1*drand()*(b2d(li)-X[i]) + C2*drand()*(b2d(gi)-X[i]);
 		V[i] = max(-Vmax,min(Vmax,V[i]));
 		X[i] = max(0.0,min(1.0,X[i]+V[i]));

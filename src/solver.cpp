@@ -2,17 +2,19 @@
 #include <cstdio>
 #include <cstdlib>
 #include <climits>
+#include <limits>
 #include <cstring>
 #include <algorithm>
 #include <vector>
 #include <set>
-//#include <thread>
-#include <ANN/ANN.h>
+#include <thread>
 #include "conf.h"
 #include "tenfold.h"
 #include "chromosome.h"
+#include "dist.h"
+#include "kd-tree.h"
 #include "onenn.h"
-#include "FarEnemyVoronoi.h"
+#include "is-alg.h"
 #include "init.h"
 #include "genetic.h"
 #include "pbil.h"
@@ -105,8 +107,8 @@ int main(int argc, char* argv[]) {
 
 	clock_t start = clock(), end;
 	LoadData(filepath,tenfcv);
-	NN.CalcDist();
-	
+	CalcDist();
+
 	Chromosome bestFound;
 
 	tryAlg("PBILwithHUX",PBILwithHUX)
@@ -115,7 +117,10 @@ int main(int argc, char* argv[]) {
 	else tryAlg("GGA",GGA)
 	else tryAlg("SGA",SGA)
 	else tryAlg("CHC",CHC)
+	else tryAlg("ClosestEnemy",ClosestEnemy)
+	else tryAlg("FarthestEnemy",FarthestEnemy)
 	else tryAlg("FarEnemyVoronoi",FarEnemyVoronoi)
+	else tryAlg("CNN",CNN)
 	else FatalError("The algorithm specified does not exists.");
 
 	end = clock();
@@ -136,6 +141,17 @@ int main(int argc, char* argv[]) {
 		printf("%.2lf\t", 100.0*NN.errorTR());
 		printf("%.2lf\n", 100.0*NN.errorTS());
 	}
-	
+
+
+/*	Chromosome a;
+	for (int i=0 ; i<TR.N ; i++) {
+		a.set(i);
+		cout << i << ": " << TR[i][0] << " " << TR[i][1] << endl;
+	}
+	a.flip(4);
+	kd_tree t(a);
+
+	cout << t.search(4) << endl;
+*/
 	return 0;
 }

@@ -10,14 +10,11 @@ using namespace std;
 
 Chromosome FarEnemyVoronoi() {
 
-	vector<double> ED = NN.EnemyDistance(false);
-	vector<pair<double,int> > cp(TR.N);
-
+	vector<pair<double,int> > cp = SortedEnemyDistance(false);
 	for (int i=0 ; i<TR.N ; i++)
-		cp[i] = make_pair(ED[i],i);
-	sort(cp.begin(),cp.end());
-	vector<int> sel;
+		cp[i].first = sqrt(cp[i].first);
 
+	vector<int> sel;
 	int exclude = TR.N * EXCLUDE;
 	for (int i=TR.N-1 ; i>=exclude ; i--) {
 		bool add = true;
@@ -28,11 +25,26 @@ Chromosome FarEnemyVoronoi() {
 		if (add) sel.push_back(i);
 	}
 
-	vector<int> chromSel(sel.size());
-	for (int i=0 ; i<sel.size() ; i++)
-		chromSel[i] = cp[sel[i]].second;
+	Chromosome sol;
+	for (int i=sel.size()-1 ; i>=0 ; i--)
+		sol.set(cp[sel[i]].second);
 
-	sort(chromSel.begin(),chromSel.end());
+	return sol;
+}
 
-	return Chromosome(chromSel);
+Chromosome CNN() {
+	Chromosome sol;
+	sol.set(rand() % TR.N);
+	NN.useJust(sol);
+
+	while (true) {
+		for (int i=0 ; i<TR.N ; i++)
+		if (!NN.classifyTR(i)) {
+			sol.set(i);
+			NN.useJust(sol);
+		}
+		if (NN.wrongTR()==0)
+			break;
+	}
+	return sol;
 }

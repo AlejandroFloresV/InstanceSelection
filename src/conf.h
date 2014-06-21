@@ -23,7 +23,7 @@ void FatalError(string str) {
 }
 
 // Common Variables
-int NumClass;
+int K;
 bool verbose = true;
 unsigned int RUN_SEED;
 

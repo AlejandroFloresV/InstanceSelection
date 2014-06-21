@@ -33,13 +33,13 @@ class ProbVector {
 
 void ProbVector::GenerateSamples() {
 
-	//vector<thread> t;
+	vector<thread> t;
 	for (int p=0 ; p<POP_SIZE ; p++) {
-		pop[p] = Chromosome(Vp);
-		//t.push_back(thread(calc_fit_chromosome,ref(pop[p])));
+		pop[p] = Chromosome(ref(Vp));
+		t.push_back(thread(calc_fit_chromosome,ref(pop[p])));
 	}
-	//for (int i=0 ; i<t.size() ; i++)
-	//	t[i].join();
+	for (int i=0 ; i<t.size() ; i++)
+		t[i].join();
 	sortPopulation(pop);
 
 	// Update Global Best
@@ -53,7 +53,7 @@ void ProbVector::GenerateSamplesHUX() {
 	int s = POP_SIZE/2, p, iA, iB;
 	if (s%2!=0) s++;
 	for (p=0 ; p<s ; p++)
-		pop[p] = Chromosome(Vp);
+		pop[p] = Chromosome(ref(Vp));
 
 	for (; p<POP_SIZE ; p+=2) {
 		iA = rand() % s;
@@ -73,12 +73,10 @@ void ProbVector::GenerateSamplesHUX() {
 
 void ProbVector::UpdateVp() {
 
-	pop[0].iterator();
-	pop[POP_SIZE-1].iterator();
 	bool bi,wi;
 	for (int i=0 ; i<TR.N ; i++) {
-		bi = pop[0].next();
-		wi = pop[POP_SIZE-1].next();
+		bi = pop[0][i];
+		wi = pop[POP_SIZE-1][i];
 		Vp[i] = Vp[i]*(1.0-LR) + b2i(bi)*LR;
 		if (bi!=wi)
 			Vp[i] = Vp[i]*(1.0-NLR) + b2i(bi)*NLR;

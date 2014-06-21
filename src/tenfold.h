@@ -13,18 +13,18 @@ class InstanceSet {
 
 	public:
 	int N;
-	ANNpointArray Point;
+	double* Attr;
 	char* Class;
 	int *Index;
 
 	InstanceSet(){}
-	InstanceSet(int n, int a) : N(n) {
-		Point = annAllocPts(n,a);
+	InstanceSet(int n) : N(n) {
+		Attr = new double[n*K];
 		Class = new char[n];
 		Index = new int[n];
 	}
-	ANNpoint operator[](const int& ind) {
-		return Point[ind];
+	double* operator[](const int& ind) {
+		return &(this->Attr[K*ind]);
 	}
 
 } TR,TS;
@@ -37,7 +37,7 @@ void LoadData (string path, int testIndex) {
 		FatalError("Error opening file");
 	
 	int N,temp,trInd,tsInd;
-	fscanf(src,"%d%d",&N,&NumClass);
+	fscanf(src,"%d%d",&N,&K);
 
 	trInd = tsInd = 0;
 	for (int i=0 ; i<10 ; i++) {
@@ -47,10 +47,10 @@ void LoadData (string path, int testIndex) {
 		else trInd += temp;
 	}
 
-	TR = InstanceSet(trInd,NumClass);
-	TS = InstanceSet(tsInd,NumClass);
+	TR = InstanceSet(trInd);
+	TS = InstanceSet(tsInd);
 
-	ANNpoint point;
+	double *attr;
 	char *clss;
 	trInd = tsInd = 0;
 	for (int n=0 ; n<N ; n++) {
@@ -58,14 +58,14 @@ void LoadData (string path, int testIndex) {
 		if (temp == testIndex) {
 			TS.Index[tsInd] = n;
 			clss = TS.Class + tsInd;
-			point = TS[tsInd++];
+			attr = TS[tsInd++];
 		} else {
 			TR.Index[trInd] = n;
 			clss = TR.Class + trInd;
-			point = TR[trInd++];
+			attr = TR[trInd++];
 		}
-		for (int k=0 ; k<NumClass ; k++)
-			fscanf(src,"%lf",&point[k]);
+		for (int k=0 ; k<K ; k++)
+			fscanf(src,"%lf",&attr[k]);
 		fscanf(src,"%d",&temp);
 		*clss = (char)temp;
 	}
