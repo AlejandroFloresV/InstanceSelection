@@ -73,7 +73,7 @@ int kd_tree::search (int _sp, bool _tr=true) {
 }
 
 void kd_tree::update_radius (int ind) {
-	double d = distSqrt(ind,sp,tr);
+	double d = distBetween(ind,sp,tr);
 	if (d < radius) {
 		nn = ind;
 		radius = d;
@@ -88,15 +88,16 @@ void kd_tree::search_rec (int ind, int attr) {
 		return;
 	}
 	int new_attr = (attr+1) % K;
-	if (n.l==-1 || (n.r!=-1 && TR[n.p][attr] <= (tr ? TR : TS)[sp][attr])) {
+	double d = TR[n.p][attr]-(tr ? TR : TS)[sp][attr];
+	if (n.l==-1 || (n.r!=-1 && d<=0)) {
 		// GO RIGHT
 		search_rec(n.r,new_attr);
-		if (n.l!=-1 && radius > ((tr ? TR : TS)[sp][attr] - TR[n.p][attr]))
+		if (n.l!=-1 && radius > sqpow(d))
 			search_rec(n.l,new_attr);
 	} else {
 		// GO LEFT
 		search_rec(n.l,new_attr);
-		if (n.r!=-1 && radius > (TR[n.p][attr] - (tr ? TR : TS)[sp][attr]))
+		if (n.r!=-1 && radius > sqpow(d))
 			search_rec(n.r,new_attr);
 	}
 	// CHECK CURRENT

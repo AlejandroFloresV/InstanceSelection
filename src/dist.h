@@ -11,10 +11,13 @@ using namespace std;
 
 double** DistTable;
 
+double sqpow(double a) {
+	return a*a;
+}
 double dist(double *a, double *b) {
 	double d = 0.0;
 	for (int i=0 ; i<K ; i++)
-		d += (a[i]-b[i])*(a[i]-b[i]);
+		d += sqpow(a[i]-b[i]);
 	return d;
 }
 
