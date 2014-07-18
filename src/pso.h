@@ -38,7 +38,7 @@ class Particle {
 	}
 
 	void GenerateSamples();
-	void UpdateParticle(double);
+	void UpdateParticle();
 };
 
 void Particle::GenerateSamples() {
@@ -62,12 +62,13 @@ void Particle::GenerateSamples() {
 	Iter++;
 }
 
-void Particle::UpdateParticle(double w) {
+void Particle::UpdateParticle() {
 	bool li,gi;
+	double dC1 = C1*drand(), dC2 = C2*drand();
 	for (int i=0 ; i<TR.N ; i++) {
 		li = LBest[i];
 		gi = (&GBest)[i];
-		V[i] = w*V[i] + C1*drand()*(b2d(li)-X[i]) + C2*drand()*(b2d(gi)-X[i]);
+		V[i] = INERTIA*V[i] + dC1*(b2d(li)-X[i]) + dC2*(b2d(gi)-X[i]);
 		V[i] = max(-Vmax,min(Vmax,V[i]));
 		X[i] = max(0.0,min(1.0,X[i]+V[i]));
 	}
@@ -79,7 +80,6 @@ void Particle::UpdateParticle(double w) {
 
 Chromosome PSO() {
 	Chromosome bestC((int)(BIT_PROB*TR.N));
-	double w;
 	
 	pso_partition.clear();
 	for (int i=0 ; i<TR.N ; i++)
@@ -92,8 +92,7 @@ Chromosome PSO() {
 	for (int i=0 ; i<MAX_ITER ; i++) {
 		for (int j=0 ; j<PARTICLES ; j++) {
 			p[j].GenerateSamples();
-			w = (Wstart - Wend)*((double)(MAX_ITER-i-1))/((double)MAX_ITER + Wend);
-			p[j].UpdateParticle(w);
+			p[j].UpdateParticle();
 		}
 	}
 	return bestC;

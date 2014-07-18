@@ -45,8 +45,7 @@ int PARTICLES = 15;
 double Vmax = 0.05;
 double C1 = 0.2;
 double C2 = 0.2;
-double Wstart = 0.5;
-double Wend = 0.15;
+double INERTIA = 0.5;
 
 // GENETIC
 double CROSS_PROB = 1.0;

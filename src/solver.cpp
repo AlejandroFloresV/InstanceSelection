@@ -56,8 +56,7 @@ void parseArgs(int argc, char* argv[]) {
 	eP += "  -Vmax   Maximum value for PSO velocity (Only PSO) (default 0.05).\n";
 	eP += "  -c1     Weight for local best  (Only PSO) (default 0.2).\n";
 	eP += "  -c2     Weight for global best (Only PSO) (default 0.2).\n";
-	eP += "  -Wstart Initial inertia weight (Only PSO) (default 0.5).\n";
-	eP += "  -Wend   Final inertia weight   (Only PSO) (default 0.15).\n";
+	eP += "  -w      Inertia weight (Only PSO) (default 0.5).\n";
 	eP += "  -cross  Crossover probability (default 1.0).\n";
 	eP += "  -ex     \% of Closest Enemy instances for the FarEnemyVoronoi\n";
 	eP += "          algorithm (default 0.33333).";
@@ -84,8 +83,7 @@ void parseArgs(int argc, char* argv[]) {
 			else iff("vmax",Vmax)
 			else iff("c1",C1)
 			else iff("c2",C2)
-			else iff("wstart",Wstart)
-			else iff("wend",Wend)
+			else iff("w",INERTIA)
 			else iff("cross",CROSS_PROB)
 			else iff("ex",EXCLUDE)
 			else if (cmd=="nv")
