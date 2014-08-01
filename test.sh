@@ -1,9 +1,11 @@
 #!/bin/bash
 
 alg=GGA
-files=("iris" "wdbc" "banana")
-iters=(100 1000 10000)
-pops=(10 20 30 40 50)
+files=("banana")
+#files=("iris" "wdbc" "banana")
+iters=(10000)
+#iters=(100 1000 10000)
+pops=(10 20 30)
 cprob=("0.5" "0.6" "0.75" "0.9" "1.0")
 
 for file in ${files[@]}

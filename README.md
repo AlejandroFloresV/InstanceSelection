@@ -33,7 +33,7 @@ Where:
 	-Vmax   Maximum value for PSO velocity (Only PSO) (default 0.05).
 	-c1     Weight for local best  (Only PSO) (default 0.2).
 	-c2     Weight for global best (Only PSO) (default 0.2).
-	-w      Inertia weight (Only PSO) (default 0.5).
+	-w      Inertia weight (Only PSO) (default 0.6).
 	-cross  Crossover probability (default 1.0).
 	-ex     \% of Closest Enemy instances for the FarEnemyVoronoi
 	        algorithm (default 0.33333).
