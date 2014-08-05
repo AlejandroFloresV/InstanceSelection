@@ -26,9 +26,11 @@ void FatalError(string str) {
 int K;
 bool verbose = true;
 unsigned int RUN_SEED;
+int LAST_BEST_ITER = 0;
 
 // GENERAL
 double ALPHA = 0.5;
+double COMP_ALPHA;
 int MAX_ITER = 10000;
 int POP_SIZE = 50;
 double MUT_PROB = 0.001;
@@ -50,5 +52,5 @@ double INERTIA = 0.6;
 // GENETIC
 double CROSS_PROB = 1.0;
 
-// FarEnemyVoronoi
+// NEHS
 double EXCLUDE = 0.33333;

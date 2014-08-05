@@ -20,14 +20,14 @@ Chromosome initSolEnemy(bool closest) {
 	return sol;
 }
 
-#define ClosestEnemy() initSolEnemy(true)
-#define FarthestEnemy() initSolEnemy(false)
+#define ClosestNE() initSolEnemy(true)
+#define FarthestNE() initSolEnemy(false)
 
 Chromosome initSolution() {
 	Chromosome s;
-	tryInit("ClosestEnemy",ClosestEnemy)
-	else tryInit("FarthestEnemy",FarthestEnemy)
-	else tryInit("FarEnemyVoronoi",FarEnemyVoronoi)
+	tryInit("ClosestNE",ClosestNE)
+	else tryInit("FarthestNE",FarthestNE)
+	else tryInit("NEHS",NEHS)
 	else tryInit("CNN",CNN)
 	else FatalError("Wrong type of population initialization.");
 	return s;

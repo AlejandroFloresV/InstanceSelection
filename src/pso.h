@@ -56,8 +56,10 @@ void Particle::GenerateSamples() {
 	// Update Global Best
 	if (Iter==0 || pop[0] < LBest) {
 		LBest = pop[0];
-		if (LBest < *GBest)
+		if (LBest < *GBest) {
 			*GBest = LBest;
+			LAST_BEST_ITER = Iter+1;
+		}
 	}
 	Iter++;
 }

@@ -119,8 +119,10 @@ Chromosome GGA() {
 			t[i].join();
 		pop = newPop;
 		sortPopulation(pop);
-		if (pop[0] < best)
+		if (pop[0] < best) {
 			best = pop[0];
+			LAST_BEST_ITER = i+1;
+		}
 	}
 
 	return best;
@@ -155,8 +157,10 @@ Chromosome SGA() {
 		pop[iA] = temp[0];
 		pop[iB] = temp[1];
 		sortPopulation(pop);
-		if (pop[0] < best)
+		if (pop[0] < best) {
 			best = pop[0];
+			LAST_BEST_ITER = i+1;
+		}
 	}
 
 	return best;
@@ -197,8 +201,10 @@ Chromosome CHC() {
 		} else {
 			sortPopulation(pop);
 			pop.resize(POP_SIZE);
-			if (pop[0] < best)
+			if (pop[0] < best) {
 				best = pop[0];
+				LAST_BEST_ITER = i+1;
+			}
 		}
 	}
 

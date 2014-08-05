@@ -43,8 +43,10 @@ void ProbVector::GenerateSamples() {
 	sortPopulation(pop);
 
 	// Update Global Best
-	if (Iter==0 || pop[0] < GBestC)
+	if (Iter==0 || pop[0] < GBestC) {
 		GBestC = pop[0];
+		LAST_BEST_ITER = Iter+1;
+	}
 	Iter++;
 }
 
@@ -66,8 +68,10 @@ void ProbVector::GenerateSamplesHUX() {
 	sortPopulation(pop);
 
 	// Update Global Best
-	if (Iter==0 || pop[0] < GBestC)
+	if (Iter==0 || pop[0] < GBestC) {
 		GBestC = pop[0];
+		LAST_BEST_ITER = Iter+1;
+	}
 	Iter++;
 }
 

@@ -8,7 +8,7 @@
 
 using namespace std;
 
-Chromosome FarEnemyVoronoi() {
+Chromosome NEHS() {
 
 	vector<pair<double,int> > cp = SortedEnemyDistance(false);
 	for (int i=0 ; i<TR.N ; i++)

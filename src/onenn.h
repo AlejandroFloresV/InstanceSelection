@@ -67,7 +67,7 @@ int OneNN::wrongTS () {
 }
 
 double OneNN::fitnessAR () {
-	return errorTR()*ALPHA + ((double)sol.size()/TR.N)*(1.0-ALPHA);
+	return wrongTR()*ALPHA + sol.size()*COMP_ALPHA;
 }
 
 vector<double> EnemyDistance(bool norm=true) {

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Full Factorial Experiment"
+echo "Folding Experiment"
 echo "Running..."
 
 endOut=$1
@@ -8,7 +8,7 @@ shift
 
 echo "bin/solver $@" > $endOut
 
-for j in {1..3}
+for j in {1..5}
 do
 	for i in {0..9}
 	do
