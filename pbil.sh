@@ -1,6 +1,6 @@
 #!/bin/bash
 
-alg=SGA
+alg=PBIL
 options="-alg $alg -iter 1000 -pop 40 -lr 0.1 -nlr 0.01"
 inits=("Random" "CNN" "ClosestNE" "FarthestNE" "NEHS")
 
