@@ -8,8 +8,5 @@ for file in `ls data/*.csv`
 do
 	l=`expr ${#file} - 9`
 	f=${file:5:$l}
-	for init in ${inits[@]}
-	do
-		./fold.sh test/$alg-$f-$init.csv $options -f $file -init $init
-	done
+	./fold.sh test/$alg-$f-$1.csv $options -f $file -init $1
 done
