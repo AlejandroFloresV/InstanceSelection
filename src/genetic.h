@@ -137,6 +137,7 @@ Chromosome SGA() {
 	
 	sortPopulation(pop);
 	best = pop[0];
+	vector<thread> t(2);
 
 	for (int i=0 ; i<MAX_ITER ; i++) {
 		iA = TournamentSel();
@@ -153,6 +154,10 @@ Chromosome SGA() {
 		}
 		temp[2].mutate();
 		temp[3].mutate();
+		t[0] = thread(calc_fit_chromosome,ref(temp[2]));
+		t[1] = thread(calc_fit_chromosome,ref(temp[3]));
+		t[0].join();
+		t[1].join();
 		sortPopulation(temp);
 		pop[iA] = temp[0];
 		pop[iB] = temp[1];
