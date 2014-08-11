@@ -12,8 +12,6 @@ using namespace std;
 // | PSO PARTICLE |
 // +--------------+
 
-vector<int> pso_partition;
-
 class Particle {
 	
 	vector<double> V,X;
@@ -22,19 +20,13 @@ class Particle {
 
 	public:
 	Particle() {}
-	Particle(Chromosome *gbc, int ind) {
+	Particle(Chromosome *gbc) {
 		GBest = gbc;
 		Iter = 0;
-		int bitsOn = TR.N / PARTICLES;
-		double hi_prob = min(0.9, BIT_PROB * TR.N * 0.7 / ((double)bitsOn));
-		double low_prob = (BIT_PROB * TR.N - bitsOn * hi_prob)/((double)(TR.N - bitsOn));
-		X = vector<double>(TR.N,low_prob);
+		X = initProbVector();
 		V = vector<double>(TR.N);
-		for (int i=0 ; i<TR.N ; i++) {
-			if (ind == pso_partition[i])
-				X[i] = hi_prob;
-			V[i] = drand()*2*Vmax - Vmax;
-		}
+		for (int i=0 ; i<TR.N ; i++)
+			V[i] = drand()*2.0*Vmax - Vmax;
 	}
 
 	void GenerateSamples();
@@ -82,14 +74,10 @@ void Particle::UpdateParticle() {
 
 Chromosome PSO() {
 	Chromosome bestC((int)(BIT_PROB*TR.N));
-	
-	pso_partition.clear();
-	for (int i=0 ; i<TR.N ; i++)
-		pso_partition.push_back(rand() % PARTICLES);
 
 	vector<Particle> p(PARTICLES);
 	for (int j=0 ; j<PARTICLES ; j++)
-		p[j] = Particle(&bestC,j);
+		p[j] = Particle(&bestC);
 	
 	for (int i=0 ; i<MAX_ITER ; i++) {
 		for (int j=0 ; j<PARTICLES ; j++) {
