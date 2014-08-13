@@ -8,7 +8,7 @@ shift
 
 echo "bin/solver $@" > $endOut
 
-for j in {1..5}
+for j in {1..3}
 do
 	for i in {0..9}
 	do
