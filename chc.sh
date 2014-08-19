@@ -1,7 +1,7 @@
 #!/bin/bash
 
 alg=CHC
-options="-alg $alg -iter 1000 -pop 30 -alpha 0.5"
+options="-alg $alg -iter 1000 -pop 30 -bit 0.5"
 
 for file in `ls data/*.csv`
 do

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 alg=SGA
-options="-alg $alg -iter 1000 -pop 30 -cross 1.0 -alpha 0.5"
+options="-alg $alg -iter 1000 -pop 30 -cross 1.0 -bit 0.5"
 
 for file in `ls data/*.csv`
 do

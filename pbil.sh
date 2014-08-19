@@ -1,7 +1,7 @@
 #!/bin/bash
 
 alg=PBIL
-options="-alg $alg -iter 1000 -pop 40 -lr 0.1 -nlr 0.01 -alpha 0.5"
+options="-alg $alg -iter 1000 -pop 40 -lr 0.1 -nlr 0.01 -bit 0.5"
 
 for file in `ls data/*.csv`
 do
