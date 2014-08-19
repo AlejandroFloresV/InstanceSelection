@@ -32,6 +32,36 @@ Chromosome NEHS() {
 	return sol;
 }
 
+Chromosome NEHB() {
+
+	double  llim = NEHB_P-NEHB_E,
+			rlim = NEHB_P+NEHB_E;
+	int begin = TR.N;
+
+	vector<pair<double,int> > cp = SortedEnemyDistance(false);
+	for (int i=0 ; i<TR.N ; i++) {
+		cp[i].first = sqrt(cp[i].first);
+		if (begin==TR.N && llim<cp[i].first)
+			begin = i;
+	}
+
+	vector<int> sel;
+	for (int i=begin ; cp[i].first < rlim ; i++) {
+		bool add = true;
+		for (int j=0 ; add && j<sel.size() ; j++)
+			if (sqrt(DistTable[cp[i].second][cp[sel[j]].second])
+					< cp[i].first)
+				add = false;
+		if (add) sel.push_back(i);
+	}
+
+	Chromosome sol;
+	for (int i=sel.size()-1 ; i>=0 ; i--)
+		sol.set(cp[sel[i]].second);
+
+	return sol;
+}
+
 Chromosome CNN() {
 	Chromosome sol;
 	sol.set(rand() % TR.N);

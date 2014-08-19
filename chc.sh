@@ -1,15 +1,11 @@
 #!/bin/bash
 
 alg=CHC
-options="-alg $alg -iter 1000 -pop 30"
-inits=("Random" "CNN" "ClosestNE" "FarthestNE" "NEHS")
+options="-alg $alg -iter 1000 -pop 30 -alpha 0.5"
 
 for file in `ls data/*.csv`
 do
 	l=`expr ${#file} - 9`
 	f=${file:5:$l}
-	for init in ${inits[@]}
-	do
-		./fold.sh test/$alg-$f-$init.csv $options -f $file -init $init
-	done
+	./fold.sh test/$alg-$f-Unif50.csv $options -f $file
 done

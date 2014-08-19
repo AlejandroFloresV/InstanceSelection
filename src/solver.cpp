@@ -87,6 +87,8 @@ void parseArgs(int argc, char* argv[]) {
 			else iff("w",INERTIA)
 			else iff("cross",CROSS_PROB)
 			else iff("ex",EXCLUDE)
+			else iff("nehb-p",NEHB_P)
+			else iff("nehb-e",NEHB_E)
 			else if (cmd=="nv")
 				verbose = false;
 			else FatalError(eP);
@@ -121,6 +123,7 @@ int main(int argc, char* argv[]) {
 	else tryAlg("ClosestNE",ClosestNE)
 	else tryAlg("FarthestNE",FarthestNE)
 	else tryAlg("NEHS",NEHS)
+	else tryAlg("NEHB",NEHB)
 	else tryAlg("CNN",CNN)
 	else FatalError("The algorithm specified does not exists.");
 

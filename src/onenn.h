@@ -38,7 +38,7 @@ bool OneNN::classify (int ind, bool tr) {
 }
 
 int OneNN::wrong (bool tr) {
-	if (sol.size()==0) return TR.N;
+	if (sol.size()==0) return (tr ? TR.N : TS.N);
 	int wrong = 0, tam = (tr ? TR.N : TS.N);
 	for (int i=0 ; i<tam ; i++)
 		if ((tr ? !sol[i] : true) && !classify(i,tr))

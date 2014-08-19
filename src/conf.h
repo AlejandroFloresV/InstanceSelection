@@ -54,3 +54,7 @@ double CROSS_PROB = 1.0;
 
 // NEHS
 double EXCLUDE = 0.33333;
+
+// NEHB
+double NEHB_P = 0.1;
+double NEHB_E = 0.01;
