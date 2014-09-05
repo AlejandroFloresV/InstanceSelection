@@ -115,8 +115,8 @@ Chromosome GGA() {
 			}
 		}
 
-		for (int i=0 ; i<t.size() ; i++)
-			t[i].join();
+		for (int j=0 ; j<t.size() ; j++)
+			t[j].join();
 		pop = newPop;
 		sortPopulation(pop);
 		if (pop[0] < best) {
@@ -195,8 +195,8 @@ Chromosome CHC() {
 			}
 		}
 
-		for (int i=0 ; i<t.size() ; i++)
-			t[i].join();
+		for (int j=0 ; j<t.size() ; j++)
+			t[j].join();
 
 		if (pop.size()==POP_SIZE) {
 			if (threshold==0) {
